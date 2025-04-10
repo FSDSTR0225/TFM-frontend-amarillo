@@ -30,7 +30,7 @@ Este proyecto de frontend está construido con las siguientes tecnologías:
 ### Dependencias Principales
 - **React**: ^19.0.0
 - **React DOM**: ^19.0.0
-
+- **Tailwind CSS**: ^v4.1.3 
 ### Herramientas de Desarrollo
 - **Vite**: ^6.2.0 - Bundler y entorno de desarrollo
 - **ESLint**: ^9.21.0 - Linter de código
@@ -65,6 +65,7 @@ frontend/
 │   ├── hooks/
 │   ├── context/
 │   ├── utils/
+│   ├── index.css (Tailwind)
 │   ├── App.jsx
 │   └── main.jsx
 ├── .eslintrc.json
