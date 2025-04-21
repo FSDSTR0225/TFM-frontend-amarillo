@@ -1,4 +1,4 @@
-# 📚 BookMatch - Tu Tinder de Libros 
+# 📚 BookMatch - Tu Tinder de Libros
 
 > Encuentra tu próxima aventura literaria con un simple desliz.
 
@@ -29,10 +29,13 @@ La aplicación te muestra portadas, sinopsis breves y valoraciones de otros usua
 Este proyecto de frontend está construido con las siguientes tecnologías:
 
 ### Dependencias Principales
+
 - **React**: ^19.0.0
 - **React DOM**: ^19.0.0
-- **Tailwind CSS**: ^v4.1.3 
+- **Tailwind CSS**: ^v4.1.3
+
 ### Herramientas de Desarrollo
+
 - **Vite**: ^6.2.0 - Bundler y entorno de desarrollo
 - **ESLint**: ^9.21.0 - Linter de código
   - **@eslint/js**: ^9.21.0
@@ -114,6 +117,7 @@ yarn dev
 Abre tu navegador y visita `http://localhost:5173`
 
 ## Visual Studio Code
+
 **CRLF**
 Se debe cambiar a modo CRLF en Visual Studio Code
 
@@ -132,15 +136,18 @@ Una vez que la aplicación esté en funcionamiento, podrás:
 Para mantener un desarrollo organizado, seguimos el siguiente flujo de trabajo con Git:
 
 ### Ramas Principales
+
 - `main`: Código de producción estable
 - `develop`: Rama de desarrollo e integración
 
 ### Ramas de Características
+
 Para nuevas funcionalidades, crea ramas con el siguiente formato:
+
 - `nombrePersona/nombre-de-la-funcionalidad`
 
-
 ### Proceso de Pull Request
+
 1. Crea tu rama desde `develop`
 2. Desarrolla tu funcionalidad o corrección
 3. Asegúrate de que pasa todas las pruebas
@@ -172,9 +179,9 @@ Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo `LICEN
 
 ## 👨‍💻 Equipo
 
-- **[Pablo Pianelo]** 
+- **[Pablo Pianelo]**
 - **[Nombre ]**
 
 ---
 
-Desarrollado con ❤️ por el equipo de amarillo 
+Desarrollado con ❤️ por el equipo de amarillo
