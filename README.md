@@ -7,7 +7,7 @@
 - [Sobre el Proyecto](#sobre-el-proyecto)
 - [Tecnologías Utilizadas](#tecnologías-utilizadas)
 - [Estructura del Proyecto](#estructura-del-proyecto)
-- [Visual Studio Code] (#visual-studio-code)
+- [Visual-Studio-Code] (#visual-studio-code)
 - [Primeros Pasos](#primeros-pasos)
   - [Prerrequisitos](#prerrequisitos)
   - [Instalación](#instalación)
@@ -113,7 +113,7 @@ yarn dev
 
 Abre tu navegador y visita `http://localhost:5173`
 
-## visual-studio-code
+## Visual Studio Code
 **CRLF**
 Se debe cambiar a modo CRLF en Visual Studio Code
 
