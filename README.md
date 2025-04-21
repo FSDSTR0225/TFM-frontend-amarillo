@@ -137,7 +137,7 @@ Para mantener un desarrollo organizado, seguimos el siguiente flujo de trabajo c
 
 ### Ramas de Características
 Para nuevas funcionalidades, crea ramas con el siguiente formato:
-- `feature/nombre-de-la-funcionalidad`
+- `nombrePersona/nombre-de-la-funcionalidad`
 
 
 ### Proceso de Pull Request
