@@ -10,7 +10,6 @@ const mockBook = {
   description: "Una obra maestra de la literatura latinoamericana.",
 };
 
-function Books() {
   return (
     <div>
       <h1>Libro Recomendado</h1>
