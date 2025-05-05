@@ -4,7 +4,7 @@ import "../styles/BookCard.css";
 function BookCard({ book }) {
   return (
     <div className="book-card">
-      <img src={book.imgbook} alt={book.name} className="book-img" />
+      <img src={book.imgBook} alt={book.name} className="book-img" />
       <h2 className="book-title">{book.name}</h2>
       <p className="book-author">
         <strong>Autor:</strong> {book.author}
