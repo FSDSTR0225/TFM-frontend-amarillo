@@ -4,9 +4,32 @@ import { useForm } from "react-hook-form";
 const AdvancedForm = () => {
   const { register, handleSubmit } = useForm({});
 
-  const onSubmitHandler = (formData) => {
+  /*const onSubmitHandler = (formData) => {
     console.log("Formulario enviado");
     console.log("DATA", formData);
+  };*/
+  const onSubmitHandler = async (formData) => {
+    console.log("Formulario enviado");
+    try {
+      const response = await fetch("http://localhost:3000/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Error en el login");
+      }
+
+      console.log("Login exitoso", result);
+      // Aquí puedes guardar un token, redirigir, etc.
+    } catch (error) {
+      console.error("Error al hacer login:", error.message);
+    }
   };
 
   return (
@@ -31,7 +54,15 @@ const AdvancedForm = () => {
           type="password"
           {...register("password", {
             required: true,
-            minLength: 6,
+            minLength: {
+              value: 6,
+              message: "La contraseña debe tener al menos 6 caracteres",
+            },
+            pattern: {
+              value: /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])/,
+              message:
+                "Debe contener al menos un número y un carácter especial",
+            },
           })}
         />
         <br />
