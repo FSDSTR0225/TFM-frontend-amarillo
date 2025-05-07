@@ -1,26 +1,28 @@
 // src/components/BookCard.jsx
+
+import "../styles/BookCard.css";
 function BookCard({ book }) {
   return (
     <div className="book-card">
-      <img src={book.image} alt={book.title} />
-      <h2>{book.title}</h2>
-      <p>
+      <img src={book.imgBook} alt={book.name} className="book-img" />
+      <h2 className="book-title">{book.name}</h2>
+      <p className="book-author">
         <strong>Autor:</strong> {book.author}
       </p>
-      <p>
+      <p className="book-genre">
         <strong>Género:</strong> {book.genre}
       </p>
-      <p>
+      <p className="book-language">
         <strong>Idioma:</strong> {book.language}
       </p>
-      <p>
-        <strong>Sinopsis:</strong> {book.description}
+      <p className="book-synopsis">
+        <strong>Sinopsis:</strong> {book.synopsis}
       </p>
 
       <div className="book-card-actions">
-        <button>👍 Me gusta</button>
-        <button>💾 Guardar</button>
-        <button>📖 Saber más</button>
+        <button className="action-btn">👍 Me gusta</button>
+        <button className="action-btn">💾 Guardar</button>
+        <button className="action-btn">📖 Saber más</button>
       </div>
     </div>
   );

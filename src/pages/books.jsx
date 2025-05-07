@@ -1,6 +1,6 @@
-// src/pages/books.jsx (o donde estés mostrando los libros)
+import { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
-function Books() {
+
 const mockBook = {
   image: "https://via.placeholder.com/150",
   title: "Cien Años de Soledad",
@@ -11,9 +11,22 @@ const mockBook = {
 };
 
   return (
-    <div>
-      <h1>Libro Recomendado</h1>
-      <BookCard book={mockBook} />
+    <div className="books-container">
+      <h1 className="header">Te apetece leer...</h1>
+      <div className="book-card-container">
+        {/* Mostrar el libro actual */}
+        {book[currentIndex] && (
+          <>
+            <BookCard book={book[currentIndex]} />
+            {/* Mostrar el botón solo si hay más libros */}
+            {currentIndex < book.length - 1 && (
+              <button className="next-btn" onClick={handleNext}>
+                Siguiente
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
