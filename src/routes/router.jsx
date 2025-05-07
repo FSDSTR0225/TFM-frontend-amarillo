@@ -3,7 +3,7 @@ import Home from "../pages/home";
 import Books from "../pages/books";
 import Save from "../pages/save";
 import Profile from "../pages/profile";
-import { Root } from "./Root";
+import { Root } from "./root";
 
 const router = createBrowserRouter([
   {
