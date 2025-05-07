@@ -1,6 +1,6 @@
 // src/pages/books.jsx (o donde estés mostrando los libros)
 import BookCard from "../components/BookCard";
-
+function Books() {
 const mockBook = {
   image: "https://via.placeholder.com/150",
   title: "Cien Años de Soledad",
@@ -17,5 +17,6 @@ const mockBook = {
     </div>
   );
 }
+
 
 export default Books;
