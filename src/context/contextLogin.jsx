@@ -3,15 +3,15 @@ import { validateToken } from '../api/tokenApi';
 
 // Initial state
 const initialState = {
-    name: '',
-    token: ''
+  name: localStorage.getItem('name') || '',
+    token: localStorage.getItem('token') || ''
 };
 
 const ADD_LOGIN = 'ADD_LOGIN';
 const LOGOUT = 'LOGOUT';
 
 
-
+// funciones del contexto
 function loginReducer(state, action) {
     switch (action.type) {
         case ADD_LOGIN:
@@ -33,26 +33,43 @@ function loginReducer(state, action) {
 }
 const loginContext = createContext();
 
-function LoginProvider({ children }) {
+export function LoginProvider({ children }) {
 
 
     const [state, dispatch] = useReducer(loginReducer, initialState);
 
+
+    
     useEffect(() => {
-        const tokenValidate = async () => {
-            try {
-                const response = await validateToken();
-                
-            } catch (err) {
-              console.log(err);
-            //   navigate("/error500");
-            }
-          };
-      
-          tokenValidate();
-
-
+        // Inicializar el estado con los valores de localStorage
+        const storedToken = localStorage.getItem('token');
+        const storedName = localStorage.getItem('name');
+        
+        if (storedToken && storedName) {
+            dispatch({ 
+                type: ADD_LOGIN, 
+                payload: { 
+                    name: storedName, 
+                    token: storedToken 
+                } 
+            });
+            
+            // Validar el token al cargar
+            validateUserToken(storedToken);
+        }
     }, []);
+    const validateUserToken = async (token) => {
+        try {
+            const response=  await  validateToken(token);
+            if (!response.ok) {
+                // Token inválido, hacer logout 
+                logout();
+            }
+        } catch (err) {
+            console.error("Error validando token:", err);
+            logout();
+        }
+    };
 
     const addLogin = ({ name, token }) => {
         localStorage.setItem('token', token);
@@ -60,8 +77,6 @@ function LoginProvider({ children }) {
         dispatch({ type: ADD_LOGIN, payload: { name, token } });
     };
 
-    const getName = () => state.name|| localStorage.getItem('name');
-    const getToken = () => state.token || localStorage.getItem('token');
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('name');
@@ -72,16 +87,19 @@ function LoginProvider({ children }) {
 
     return (
         <loginContext.Provider value={{
-            addLogin,
-            getName,
-            getToken,
-            logout
+            isLoggedIn: !!state.token, //si hay un token
+            name: state.name,           
+            token: state.token,         
+            addLogin, //funcion para añadir el login
+            logout //funcion para cerrar sesion
         }}>
             {children}
         </loginContext.Provider>
     );
 }
 
+
+// Custom hook para usar el contexto de login
 export function useLogin() {
     const context = useContext(loginContext);
     if (!context) {

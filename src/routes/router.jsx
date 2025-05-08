@@ -11,7 +11,7 @@ const router = createBrowserRouter([
         // Ejemplo de ruta anidada
         //   {
         //   path: "/",
-        //   element: <Home />,
+        //   element: <AdvancedForm />,
         // },
 
       ],
