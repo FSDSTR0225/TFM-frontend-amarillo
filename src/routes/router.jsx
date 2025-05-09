@@ -6,6 +6,7 @@ import Profile from "../pages/profile";
 import { Root } from "./root";
 
 const router = createBrowserRouter([
+
   {
     // Ruta principal que pillara la estrutura de root.jsx
     path: "/",
@@ -21,7 +22,6 @@ const router = createBrowserRouter([
         path: "/books",
         element: <Books />,
       },
-
       {
         path: "/save",
         element: <Save />,
