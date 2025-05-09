@@ -1,44 +1,34 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import Books from "./pages/books";
+import Save from "./pages/Save";
+import Profile from "./pages/Profile";
 
-const AdvancedForm = () => {
-  const { register, handleSubmit } = useForm({});
-
-  const onSubmitHandler = (formData) => {
-    console.log("Formulario enviado");
-    console.log("DATA", formData);
-  };
-
+function App() {
   return (
-    <div>
-      <h1>Formulario Avanzado</h1>
-      <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <label>Email:</label>
-        <input
-          type="email"
-          {...register("email", {
-            required: true,
-            message: "El email es requerido",
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "El email no es valido",
-            },
-          })}
-        />
-        <br />
-        <label>Password:</label>
-        <input
-          type="password"
-          {...register("password", {
-            required: true,
-            minLength: 6,
-          })}
-        />
-        <br />
-        <button type="submit">Enviar</button>
-      </form>
-    </div>
-  );
-};
+    <BrowserRouter>
+      {/* Incluimos el Header fuera de las rutas para que se muestre en todas las páginas */}
+      <Header />
 
-export default AdvancedForm;
+      <main>
+        {/* Navegación (opcional si la quieres dentro del Header o Footer) */}
+
+        {/* Rutas */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/books" element={<Books />} />
+          <Route path="/save" element={<Save />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </main>
+
+      {/* Incluimos el Footer fuera de las rutas para que se muestre en todas las páginas */}
+      <Footer />
+    </BrowserRouter>
+  );
+}
+
+export default App;
+

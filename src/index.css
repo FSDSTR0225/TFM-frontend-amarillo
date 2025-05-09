@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss"; */
 /* Importa los estilos base y los restablecimientos (resets) de CSS que Tailwind aplica  */
 @tailwind base;
 /* Proporciona una capa donde se pueden definir y utilizar clases de componentes personalizados. */
