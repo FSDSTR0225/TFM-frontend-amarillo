@@ -5,10 +5,11 @@ export const Root = () => {
   return (
     //Estructura de la pagina principal, donde se puede añadir un header y un footer
     <>
-    
       <main>
         <Outlet />
       </main>
     </>
   );
 };
+
+export default Root;
