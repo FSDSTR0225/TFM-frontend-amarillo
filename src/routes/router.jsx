@@ -4,6 +4,7 @@ import Books from "../pages/books";
 import Save from "../pages/save";
 import Profile from "../pages/profile";
 import { Root } from "./root";
+import AdvancedForm from "../pages/AdvanceForm";
 
 const router = createBrowserRouter([
 
@@ -29,6 +30,9 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },{
+        path: "/login",
+        element: <AdvancedForm />,
       },
     ],
   },

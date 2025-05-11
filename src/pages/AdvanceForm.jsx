@@ -1,32 +1,31 @@
-import React from "react";
+// import React from "react";
 import { useForm } from "react-hook-form";
+import { loginUser } from "../api/UserApi";
+import { useLogin } from "../context/contextLogin";
+import { useNavigate } from "react-router-dom";
 
 const AdvancedForm = () => {
   const { register, handleSubmit } = useForm({});
-
-  /*const onSubmitHandler = (formData) => {
-    console.log("Formulario enviado");
-    console.log("DATA", formData);
-  };*/
+// conexion con el contexto
+  const { addLogin } = useLogin();
+  const navigate = useNavigate();
   const onSubmitHandler = async (formData) => {
-    console.log("Formulario enviado");
+    console.log("Datos del formulario:", formData);
     try {
-      const response = await fetch("http://localhost:3000/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const result = await loginUser(formData);
 
-      const result = await response.json();
-
-      if (!response.ok) {
+      if (!result) {
         throw new Error(result.message || "Error en el login");
       }
 
-      console.log("Login exitoso", result);
-      // Aquí puedes guardar un token, redirigir, etc.
+      console.log("Login exitosos", result.user);
+      // Aquí  guarda un token y el nombre.
+      addLogin({
+        name: result.user.name || formData.email,
+        token: result.access_token,
+      });
+      // se va a la pagina principal
+      navigate("/");
     } catch (error) {
       console.error("Error al hacer login:", error.message);
     }

@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
 import "../styles/Books.css";
+import { getBooks } from "../api/BookApi";
+import { useLogin } from "../context/contextLogin";
 
 function Books() {
   const [book, setBook] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  //conexion con el contexto
+  const { token, isLoggedIn } = useLogin();
 
   useEffect(() => {
-    fetch("http://localhost:3000/books")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Libros:", data);
-        setBook(data);
-        console.log("Libro recomendado:", data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error al obtener libro:", err);
-        setLoading(false);
-      });
+    const booksAll = async () => {
+      try {
+        // mado el token al api
+        const response = await getBooks(token);
+        setBook(response);
+      } catch (err) {
+        console.log(err);
+
+        //  navigate("/error500");
+      }
+    };
+    booksAll();
   }, []);
 
   const handleNext = () => {
@@ -27,8 +30,8 @@ function Books() {
       setCurrentIndex((prev) => prev + 1);
     }
   };
-
-  if (loading) return <p className="loading">Cargando...</p>;
+// si no hay token no se puede acceder a la pagina
+  if (!isLoggedIn) return <p className="loading">Cargando...</p>;
   if (!book) return <p>No se encontró ningún libro recomendado.</p>;
 
   return (
