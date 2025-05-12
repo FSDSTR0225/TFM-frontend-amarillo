@@ -146,7 +146,7 @@ Para mantener un desarrollo organizado, seguimos el siguiente flujo de trabajo c
 
 Para nuevas funcionalidades, crea ramas con el siguiente formato:
 
-- `nombrePersona/nombre-de-la-funcionalidad`
+- `nombre-de-la-funcionalidadNombre-Persona`
 
 ### Proceso de Pull Request
 
