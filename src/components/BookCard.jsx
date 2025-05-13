@@ -1,9 +1,17 @@
 // src/components/BookCard.jsx
-
+import { useNavigate } from "react-router-dom";
 import "../styles/BookCard.css";
 function BookCard({ book }) {
+  const navigate = useNavigate();
+
+  function handlePerfil() {
+    navigate(`/books/PerfilBook/${book._id}`, { state: { book: book } });
+    
+  }
+
   return (
     <div className="book-card">
+      
       <img src={book.imgBook} alt={book.name} className="book-img" />
       <h2 className="book-title">{book.name}</h2>
       <p className="book-author">
@@ -22,7 +30,7 @@ function BookCard({ book }) {
       <div className="book-card-actions">
         <button className="action-btn">👍 Me gusta</button>
         <button className="action-btn">💾 Guardar</button>
-        <button className="action-btn">📖 Saber más</button>
+        <button className="action-btn" onClick={handlePerfil}>📖 Saber más</button>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import Save from "../pages/save";
 import Profile from "../pages/profile";
 import { Root } from "./root";
 import AdvancedForm from "../pages/AdvanceForm";
+import PerfilBook from "../pages/PerfilBook";
 
 const router = createBrowserRouter([
 
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
     // Ruta principal que pillara la estrutura de root.jsx
     path: "/",
     element: <Root />,
+    // errorElement: <ErrorPage />, 
     children: [
       // Ejemplo de ruta anidada
       {
@@ -33,8 +35,15 @@ const router = createBrowserRouter([
       },{
         path: "/login",
         element: <AdvancedForm />,
-      },
+      },{
+        path: "/books/PerfilBook/:id",
+        element: <PerfilBook />,
+       }//,{
+      //   path: "/*",
+      //   element: <ErrorPage2 />,
+      // },
     ],
+
   },
 ]);
 
