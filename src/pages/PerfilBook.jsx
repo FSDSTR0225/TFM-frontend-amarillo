@@ -3,7 +3,7 @@ import "../styles/PerfilBook.css"; // Asegúrate de tener este archivo CSS
 import { useEffect, useState } from "react";
 import { useLogin } from "../context/contextLogin";
 import { useForm } from "react-hook-form";
-import { rewiusBook } from "../api/BookApi";
+import { Bookdata, rewiusBook } from "../api/BookApi";
 
 function PerfilBook() {
   const { register, handleSubmit } = useForm({});
@@ -11,7 +11,7 @@ function PerfilBook() {
   const location = useLocation();
   const { book } = location.state || {};
   const [dataBook, setdataBook] = useState([]);
-  const { token,name } = useLogin();
+  const { token } = useLogin();
 
   console.log(book);
 
@@ -25,9 +25,9 @@ function PerfilBook() {
   const fetchBookData = async () => {
     try {
       // mado el token al api
-      const response = await dataBook(token, book._id);
-      setdataBook(response);
-      console.log(dataBook);
+      const response = await Bookdata(token, book._id);
+      setdataBook(response.review);
+      console.log("datos del libro"+dataBook);
     } catch (err) {
       console.log(err);
 
@@ -46,7 +46,7 @@ function PerfilBook() {
       console.log("Datos del formulario:", formData);
       
       try {
-        const result = await rewiusBook(formData,name, token,book._id);
+        const result = await rewiusBook(formData, token,book._id);
   
         if (!result) {
           throw new Error(result.message || "Error en el login");
@@ -97,31 +97,24 @@ function PerfilBook() {
           </div>
         </div>
 
-        {/* <div className="reviews-section">
-          <h3>Opiniones</h3>
-          <div className="review">
-            <div className="review-header">
-              <span className="reviewer-name">Juan Pérez</span>
-              <div className="rating">
-                <span className="star">★</span>
-                <span className="star">★</span>
-                <span className="star">★</span>
-                <span className="star">★</span>
-                <span className="star empty">☆</span>
+                <div className="book-reviews">
+          <h3>Opiniones de los usuarios</h3>
+          {dataBook.map((review) => (
+            <div key={review._id} className="review-card">
+              <div className="review-header">
+                <span className="reviewer-name">{review.user}</span>
+                <span className="rating">{review.rating}</span>
               </div>
+              <p className="review-text">{review.text}</p>
             </div>
-            <p className="review-text">
-              Un libro fascinante que no pude dejar de leer. La trama es
-              envolvente y los personajes están muy bien desarrollados.
-            </p>
+          ))}
           </div>
-        </div> */}
 
-        <div class="review-form-container">
+        <div className="review-form-container">
           <h4>Deja tu opinión</h4>
-          <form class="review-form" onSubmit={handleSubmit(onSubmitHandler)}>
-            <div class="rating-input">
-              <span class="rating-label">Tu valoración:</span>
+          <form className="review-form" onSubmit={handleSubmit(onSubmitHandler)}>
+            <div className="rating-input">
+              <span className="rating-label">Tu valoración:</span>
               <input
                 type="number"
                 name="rating"
@@ -129,22 +122,22 @@ function PerfilBook() {
                 required
                 {...register("rating")}
                 rows="1"
-                class="rating-textarea"
+                className="rating-textarea"
               ></input>
             </div>
 
-            <div class="review-input">
+            <div className="review-input">
               <textarea
                 name="text"
                 placeholder="Escribe tu opinión aquí..."
                 required
                 {...register("text")}
                 rows="4"
-                class="review-textarea"
+                className="review-textarea"
               ></textarea>
             </div>
 
-            <button type="submit" class="submit-review">
+            <button type="submit" className="submit-review">
               Enviar Opinión
             </button>
           </form>

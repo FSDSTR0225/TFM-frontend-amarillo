@@ -9,7 +9,7 @@ export const getBooks = async (token) => {
   return res.json();
   }
 
-  export const dataBook = async (token,id) => {
+  export const Bookdata = async (token,id) => {
   const res = await fetch(`http://localhost:3000/books/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token, },
@@ -18,11 +18,11 @@ export const getBooks = async (token) => {
   return res.json();
   }
 
-   export const rewiusBook = async (data,name,token,id) => {
+   export const rewiusBook = async (data,token,id) => {
   const res = await fetch(`http://localhost:3000/books/review/${id}`, {
-    method: "PUT",
+    method: "PATCH",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token, },
-    body: JSON.stringify(data,name),
+    body: JSON.stringify(data),
   });
   return res.json();
   }
