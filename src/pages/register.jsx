@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import "./Register.css";
+import "../styles/register.css";
 import { registerUser } from "../api/UserApi.jsx";
 
 function Register() {
   const [formData, setFormData] = useState({
     name: "",
-    lastName: "",
     email: "",
     password: "",
   });
@@ -54,6 +53,9 @@ function Register() {
       }
       if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
         newErrors.password = "Debe tener al menos un símbolo especial.";
+      }
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(formData.password)) {
+        newErrors.password = "Debe tener al menos una letra minúscula, una letra mayúscula.";
       }
     }
 

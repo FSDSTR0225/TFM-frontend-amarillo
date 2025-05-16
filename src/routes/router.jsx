@@ -5,6 +5,7 @@ import Save from "../pages/save";
 import Profile from "../pages/profile";
 import { Root } from "./root";
 import AdvancedForm from "../pages/AdvanceForm";
+import Register from "../pages/register";
 
 const router = createBrowserRouter([
 
@@ -33,7 +34,10 @@ const router = createBrowserRouter([
       },{
         path: "/login",
         element: <AdvancedForm />,
-      },
+      },{
+        path: "/register",
+        element: <Register />,
+      }
     ],
   },
 ]);
