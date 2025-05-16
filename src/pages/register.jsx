@@ -45,8 +45,8 @@ function Register() {
     if (!formData.password) {
       newErrors.password = "La contraseña es obligatoria.";
     } else {
-      if (formData.password.length < 6) {
-        newErrors.password = "Debe tener al menos 6 caracteres.";
+      if (formData.password.length < 8) {
+        newErrors.password = "Debe tener al menos 8 caracteres.";
       }
       if (!/\d/.test(formData.password)) {
         newErrors.password = "Debe contener al menos un número.";
