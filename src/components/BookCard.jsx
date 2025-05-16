@@ -5,7 +5,7 @@ function BookCard({ book }) {
   const navigate = useNavigate();
 
   function handlePerfil() {
-    navigate(`/books/PerfilBook/${book._id}`, { state: { book: book } });
+    navigate(`/books/PerfilBook`, { state: { book: book } });
     
   }
 
