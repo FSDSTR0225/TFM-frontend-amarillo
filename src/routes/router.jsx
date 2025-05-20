@@ -7,7 +7,7 @@ import { Root } from "./root";
 import AdvancedForm from "../pages/AdvanceForm";
 import PerfilBook from "../pages/PerfilBook";
 import ErrorPage from "../pages/ErrorPage";
-import ErrorPage2 from "../pages/ErrorPage";
+import ErrorPage2 from "../pages/ErrorPage2";
 
 const router = createBrowserRouter([
 

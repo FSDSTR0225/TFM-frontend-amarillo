@@ -3,17 +3,25 @@ import "../styles/PerfilBook.css"; // Asegúrate de tener este archivo CSS
 import { useEffect, useState } from "react";
 import { useLogin } from "../context/contextLogin";
 import { useForm } from "react-hook-form";
-import { Bookdata, rewiusBook } from "../api/BookApi";
+import { Bookdata, deleteRewius, rewiusBook } from "../api/BookApi";
 import { getUserId } from "../api/UserApi";
+import InputField from "../components/Input";
+import { validateReview } from "../components/ValidateInput";
 
 function PerfilBook() {
-  const { register, handleSubmit } = useForm({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({});
   const navigate = useNavigate();
   const location = useLocation();
   const { book } = location.state || {};
   const [dataBook, setdataBook] = useState([]);
   const { token } = useLogin();
   const [userNames, setUserNames] = useState({});
+  const [userID, setUserID] = useState({});
 
   useEffect(() => {
     fetchBookData();
@@ -33,17 +41,17 @@ function PerfilBook() {
         reviews.map(async (review) => {
           const userData = await getUserId(token, review.user);
           namesMap[review.user] = userData.name;
+          userID[review.user] = userData._id;
         })
       );
 
       setUserNames(namesMap); // guardas los nombres
       setdataBook(reviews); // guardas las opiniones
+      setUserID(userID); // guardas los ids
       console.log("datos del libro" + dataBook);
       console.log("datos del user" + namesMap);
     } catch (err) {
       console.log(err);
-
-      //  navigate("/error500");
     }
   };
 
@@ -51,6 +59,17 @@ function PerfilBook() {
     book.name
   )}&i=stripbooks`;
 
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      const response = await deleteRewius(reviewId,token,book._id);
+      if (!response) {
+        throw new Error(response.message || "Error al ELIMINAR");
+      }
+      fetchBookData();
+    } catch (error) {
+      console.error("Error al hacer login:", error.message);
+    }
+  };
   const onSubmitHandler = async (formData) => {
     console.log("Datos del formulario:", formData);
 
@@ -58,10 +77,11 @@ function PerfilBook() {
       const result = await rewiusBook(formData, token, book._id);
 
       if (!result) {
-        throw new Error(result.message || "Error en el login");
+        throw new Error(result.message || "Error al enviar la opinión");
       }
 
       fetchBookData();
+      reset();
     } catch (error) {
       console.error("Error al hacer login:", error.message);
     }
@@ -112,19 +132,31 @@ function PerfilBook() {
         <button onClick={() => handleBack(book._id)} className="buy-button">
           volver
         </button>
+
+        {/* seccion de opiniones */}
         <div className="book-reviews">
           <h3>Opiniones de los usuarios</h3>
-          {dataBook.map((review) => (
-            <div key={review._id} className="review-card">
-              <div className="review-header">
-                <span className="reviewer-name">
-                  Nombre: {userNames[review.user]}
-                </span>
-                <span className="rating">{review.rating}</span>
+          {dataBook.map((review) => {
+            const isCurrentUser = review.user === userID[review.user];
+
+            return (
+              <div key={review._id} className="review-card">
+                <div className="review-header">
+                  <span className="reviewer-name">
+                    Nombre: {userNames[review.user]}
+                  </span>
+                  <span className="rating">{review.rating}</span>
+                </div>
+                <p className="review-text">{review.text}</p>
+
+                {isCurrentUser && (
+                  <button onClick={() => handleDeleteReview(review._id)}>
+                    Eliminar
+                  </button>
+                )}
               </div>
-              <p className="review-text">{review.text}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="review-form-container">
@@ -135,26 +167,28 @@ function PerfilBook() {
           >
             <div className="rating-input">
               <span className="rating-label">Tu valoración:</span>
-              <input
+              <InputField
                 type="number"
+                required={true}
                 name="rating"
-                placeholder="Escribe tu valoración aquí..."
-                required
-                {...register("rating")}
-                rows="1"
+                placeholder="Escribe tu valoración aqui..."
+                register={register}
                 className="rating-textarea"
-              ></input>
+                errors={errors}
+              />
             </div>
 
             <div className="review-input">
-              <textarea
+              <InputField
+                type="textarea"
+                required={true}
                 name="text"
-                placeholder="Escribe tu opinión aquí..."
-                required
-                {...register("text")}
-                rows="4"
+                placeholder="Escribe tu opinión aqui..."
+                register={register}
+                validationRules={validateReview}
                 className="review-textarea"
-              ></textarea>
+                errors={errors}
+              />
             </div>
 
             <button type="submit" className="submit-review">

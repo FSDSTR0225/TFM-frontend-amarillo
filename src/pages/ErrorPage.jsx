@@ -1,6 +1,6 @@
 import React from "react";
 
-function ErrorPage2() {
+function ErrorPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
@@ -17,4 +17,4 @@ function ErrorPage2() {
   );
 }
 
-export default ErrorPage2;
+export default ErrorPage;

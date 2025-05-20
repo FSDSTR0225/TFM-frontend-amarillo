@@ -26,3 +26,11 @@ export const getBooks = async (token) => {
   });
   return res.json();
   }
+
+ export const deleteRewius = async (data,token,id) => {
+  const res = await fetch(`http://localhost:3000/books/review/${id}?reviewId=${data}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token, },
+  });
+  return res.json();
+  }
