@@ -87,6 +87,13 @@ function PerfilBook() {
     }
   };
 
+ const promedio = (reviewsArray) => {
+  if (!reviewsArray || reviewsArray.length === 0) 
+    return "no hay opiniones";
+  const total = reviewsArray.reduce((acc, review) => acc + review.rating, 0);
+  return (total / reviewsArray.length).toFixed(1); // .toFixed para un decimal
+};
+
   // volver a la pagina anterior
   const handleBack = (idBook) => {
     navigate("/books", { state: { idBook } });
@@ -118,6 +125,9 @@ function PerfilBook() {
             </p>
             <p className="book-synopsis">
               <strong>Sinopsis:</strong> {book.synopsis}
+            </p>
+            <p className="book-rating">
+              <strong>Valoración:</strong> {promedio(dataBook)}
             </p>
             <a
               href={amazonUrl}
