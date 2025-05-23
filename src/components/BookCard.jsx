@@ -1,7 +1,33 @@
 // src/components/BookCard.jsx
 
+import { get } from "react-hook-form";
 import "../styles/BookCard.css";
+import { useState } from "react";
+import { getVoteBooks } from "../api/BookApi";
+
 function BookCard({ book }) {
+  const [likeCount, setLikeCount] = useState(book.like || 0);
+  const [dislikeCount, setDislikeCount] = useState(book.dislike || 0);
+  console.log("contador dislike", book.dislike);
+  console.log("contador like", book.like);
+  const token = localStorage.getItem("token");
+
+  const handleVote = async (voteType) => {
+    try {
+      const res = await getVoteBooks(token, book._id, voteType);
+
+      if (!res) {
+        throw new Error(response.message || `Error al enviar el voto`);
+      }
+      console.log("Voto enviado:", res);
+      const updatedBook = res;
+      setLikeCount(updatedBook.like);
+      setDislikeCount(updatedBook.dislike);
+    } catch (error) {
+      console.error("Error al votar:", error);
+    }
+  };
+
   return (
     <div className="book-card">
       <img src={book.imgBook} alt={book.name} className="book-img" />
@@ -20,7 +46,23 @@ function BookCard({ book }) {
       </p>
 
       <div className="book-card-actions">
-        <button className="action-btn">👍 Me gusta</button>
+        <button
+          className="action-btn"
+          onClick={() => {
+            handleVote("like");
+          }}
+        >
+          👍 Me gusta ({likeCount})
+        </button>
+        <button
+          className="action-btn"
+          onClick={() => {
+            handleVote("dislike");
+          }}
+        >
+          👎 No me gusta ({dislikeCount})
+        </button>
+
         <button className="action-btn">💾 Guardar</button>
         <button className="action-btn">📖 Saber más</button>
       </div>

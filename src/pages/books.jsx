@@ -30,7 +30,8 @@ function Books() {
       setCurrentIndex((prev) => prev + 1);
     }
   };
-// si no hay token no se puede acceder a la pagina
+
+  // si no hay token no se puede acceder a la pagina
   if (!isLoggedIn) return <p className="loading">Cargando...</p>;
   if (!book) return <p>No se encontró ningún libro recomendado.</p>;
 
