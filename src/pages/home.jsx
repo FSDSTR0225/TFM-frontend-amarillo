@@ -15,7 +15,7 @@ const navigate = useNavigate();
   
   <h1>Página de Inicio</h1>
   <button onClick={() => navigate("/login")}>login</button>
-  <button >register</button>
+  <button onClick={() => navigate("/register")}>register</button>
   <button onClick={() => navigate("/books")}>books</button>
 
   
