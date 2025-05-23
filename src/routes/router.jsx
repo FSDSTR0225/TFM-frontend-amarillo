@@ -5,7 +5,11 @@ import Save from "../pages/save";
 import Profile from "../pages/profile";
 import { Root } from "./root";
 import AdvancedForm from "../pages/AdvanceForm";
+import PerfilBook from "../pages/PerfilBook";
+import ErrorPage from "../pages/ErrorPage";
+import ErrorPage2 from "../pages/ErrorPage2";
 import Register from "../pages/register";
+
 
 const router = createBrowserRouter([
 
@@ -13,6 +17,7 @@ const router = createBrowserRouter([
     // Ruta principal que pillara la estrutura de root.jsx
     path: "/",
     element: <Root />,
+    errorElement: <ErrorPage />, 
     children: [
       // Ejemplo de ruta anidada
       {
@@ -35,10 +40,18 @@ const router = createBrowserRouter([
         path: "/login",
         element: <AdvancedForm />,
       },{
+        path: "/books/PerfilBook",
+        element: <PerfilBook />,
+       },{
         path: "/register",
         element: <Register />,
-      }
+      },{
+         path: "/*",
+        element: <ErrorPage2 />,
+      },
+
     ],
+
   },
 ]);
 

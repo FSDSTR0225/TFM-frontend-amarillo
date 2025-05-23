@@ -1,11 +1,20 @@
 // src/components/BookCard.jsx
 
+import { useNavigate } from "react-router-dom";
 import { get } from "react-hook-form";
 import "../styles/BookCard.css";
 import { useState } from "react";
 import { getVoteBooks } from "../api/BookApi";
 
 function BookCard({ book }) {
+
+  const navigate = useNavigate();
+
+  function handlePerfil() {
+    navigate(`/books/PerfilBook`, { state: { book: book } });
+    
+  }
+
   const [likeCount, setLikeCount] = useState(book.like || 0);
   const [dislikeCount, setDislikeCount] = useState(book.dislike || 0);
   console.log("contador dislike", book.dislike);
@@ -28,8 +37,10 @@ function BookCard({ book }) {
     }
   };
 
+
   return (
     <div className="book-card">
+      
       <img src={book.imgBook} alt={book.name} className="book-img" />
       <h2 className="book-title">{book.name}</h2>
       <p className="book-author">
@@ -64,7 +75,7 @@ function BookCard({ book }) {
         </button>
 
         <button className="action-btn">💾 Guardar</button>
-        <button className="action-btn">📖 Saber más</button>
+        <button className="action-btn" onClick={handlePerfil}>📖 Saber más</button>
       </div>
     </div>
   );

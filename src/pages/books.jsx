@@ -3,12 +3,15 @@ import BookCard from "../components/BookCard";
 import "../styles/Books.css";
 import { getBooks } from "../api/BookApi";
 import { useLogin } from "../context/contextLogin";
+import { useLocation } from "react-router-dom";
 
 function Books() {
   const [book, setBook] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   //conexion con el contexto
   const { token, isLoggedIn } = useLogin();
+    const location = useLocation();
+  const { idBook } = location.state || {};
 
   useEffect(() => {
     const booksAll = async () => {
@@ -16,6 +19,14 @@ function Books() {
         // mado el token al api
         const response = await getBooks(token);
         setBook(response);
+// Si venimos desde la vista de detalle con un idBook, 
+// buscamos en el array de libros (response) la posición 
+// que coincide con ese ID. Si lo encontramos (idx >= 0), 
+// actualizamos currentIndex para mostrar ese libro en el carrusel.
+         if (idBook) {
+          const idx = response.findIndex(b => b._id === idBook);
+          if (idx >= 0) setCurrentIndex(idx);
+        }
       } catch (err) {
         console.log(err);
 

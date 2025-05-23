@@ -21,6 +21,7 @@ const AdvancedForm = () => {
       console.log("Login exitosos", result.user);
       // Aquí  guarda un token y el nombre.
       addLogin({
+        id: result.user.id,
         name: result.user.name || formData.email,
         token: result.access_token,
       });

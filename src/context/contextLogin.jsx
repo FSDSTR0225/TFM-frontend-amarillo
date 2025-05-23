@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 // Initial state
 const initialState = {
+  id: localStorage.getItem("id") || "",
   name: localStorage.getItem("name") || "",
   token: localStorage.getItem("token") || "",
 };
@@ -16,11 +17,13 @@ function loginReducer(state, action) {
   switch (action.type) {
     case ADD_LOGIN:
       return {
+        id: action.payload.id,
         name: action.payload.name,
         token: action.payload.token,
       };
     case LOGOUT:
       return {
+        id: "",
         name: "",
         token: "",
       };
@@ -39,12 +42,14 @@ export function LoginProvider({ children }) {
     // Inicializar el estado con los valores de localStorage
     const storedToken = localStorage.getItem("token");
     const storedName = localStorage.getItem("name");
+     const storedid = localStorage.getItem("id");
 
     if (storedToken && storedName) {
       dispatch({
         type: ADD_LOGIN,
         payload: {
           name: storedName,
+          id: storedid,
           token: storedToken,
         },
       });
@@ -68,13 +73,15 @@ export function LoginProvider({ children }) {
     }
   };
 
-  const addLogin = ({ name, token }) => {
+  const addLogin = ({ id, name, token }) => {
+    localStorage.setItem("id", id);
     localStorage.setItem("token", token);
     localStorage.setItem("name", name);
-    dispatch({ type: ADD_LOGIN, payload: { name, token } });
+    dispatch({ type: ADD_LOGIN, payload: {id, name, token } });
   };
 
   const logout = () => {
+     localStorage.removeItem("id");
     localStorage.removeItem("token");
     localStorage.removeItem("name");
     dispatch({ type: LOGOUT });
@@ -83,7 +90,8 @@ export function LoginProvider({ children }) {
   return (
     <loginContext.Provider
       value={{
-        isLoggedIn: !!state.token, //si hay un token
+        isLoggedIn: !!state.token,
+         id: state.id, //si hay un token
         name: state.name,
         token: state.token,
         addLogin, //funcion para añadir el login

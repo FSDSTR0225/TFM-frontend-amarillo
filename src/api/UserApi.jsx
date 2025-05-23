@@ -17,6 +17,20 @@ export const loginUser = async (data) => {
   });
   
   return res.json();
+
+  }
+
+  export const getUserId = async (token,id) => {
+  const res = await fetch(`http://localhost:3000/users/${id}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json",
+         authorization: "Bearer " + token,
+     },
+    
+  });
+  return res.json();
+  }
+
   
   }; 
 
