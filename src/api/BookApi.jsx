@@ -16,18 +16,3 @@ export const getVoteBooks = async (token, bookId, voteType) => {
 
   return res.json();
 };
-
-/*
-const response = await fetch(`http://localhost:3000/books/${book._id}/vote`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify({ vote: voteType }),
-});
-
-if (!response.ok) {
-  const errorText = await response.text();
-  throw new Error(`Error al enviar el voto: ${response.status} ${errorText}`);
-}*/
