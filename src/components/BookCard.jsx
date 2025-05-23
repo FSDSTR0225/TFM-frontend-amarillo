@@ -1,7 +1,6 @@
 // src/components/BookCard.jsx
 
 import { useNavigate } from "react-router-dom";
-import { get } from "react-hook-form";
 import "../styles/BookCard.css";
 import { useState } from "react";
 import { getVoteBooks } from "../api/BookApi";
@@ -26,7 +25,7 @@ function BookCard({ book }) {
       const res = await getVoteBooks(token, book._id, voteType);
 
       if (!res) {
-        throw new Error(response.message || `Error al enviar el voto`);
+        throw new Error(res.message || `Error al enviar el voto`);
       }
       console.log("Voto enviado:", res);
       const updatedBook = res;

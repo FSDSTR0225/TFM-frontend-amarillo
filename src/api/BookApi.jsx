@@ -31,8 +31,8 @@ export const getBooks = async (token) => {
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token, },
   });
   return res.json();
-  }
-};
+  };
+
 
 export const getVoteBooks = async (token, bookId, voteType) => {
   const res = await fetch(`http://localhost:3000/books/${bookId}/vote`, {
