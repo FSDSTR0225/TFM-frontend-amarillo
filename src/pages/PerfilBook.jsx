@@ -19,7 +19,7 @@ function PerfilBook() {
   const location = useLocation();
   const { book } = location.state || {};
   const [dataBook, setdataBook] = useState([]);
-  const { token } = useLogin();
+  const { token ,id} = useLogin();
   const [userNames, setUserNames] = useState({});
   const [userID, setUserID] = useState({});
 
@@ -147,7 +147,8 @@ function PerfilBook() {
         <div className="book-reviews">
           <h3>Opiniones de los usuarios</h3>
           {dataBook.map((review) => {
-            const isCurrentUser = review.user === userID[review.user];
+            const isCurrentUser = review.user === id;
+            console.log("userID", id);
 
             return (
               <div key={review._id} className="review-card">
