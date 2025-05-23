@@ -1,7 +1,9 @@
 // src/components/BookCard.jsx
 
+import { get } from "react-hook-form";
 import "../styles/BookCard.css";
 import { useState } from "react";
+import { getVoteBooks } from "../api/BookApi";
 
 function BookCard({ book }) {
   const [likeCount, setLikeCount] = useState(book.like || 0);
@@ -12,21 +14,13 @@ function BookCard({ book }) {
 
   const handleVote = async (voteType) => {
     try {
-      const response = await fetch(`http://localhost:3000/books/${book._id}/vote`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ vote: voteType }),
-      });
+      const res = await getVoteBooks(token, book._id, voteType);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error al enviar el voto: ${response.status} ${errorText}`);
+      if (!res) {
+        throw new Error(response.message || `Error al enviar el voto`);
       }
-
-      const updatedBook = await response.json();
+      console.log("Voto enviado:", res);
+      const updatedBook = res;
       setLikeCount(updatedBook.like);
       setDislikeCount(updatedBook.dislike);
     } catch (error) {
