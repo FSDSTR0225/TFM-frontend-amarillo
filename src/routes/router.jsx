@@ -9,6 +9,7 @@ import PerfilBook from "../pages/PerfilBook";
 import ErrorPage from "../pages/ErrorPage";
 import ErrorPage2 from "../pages/ErrorPage2";
 import Register from "../pages/register";
+import Chat from "../pages/chat";
 
 
 const router = createBrowserRouter([
@@ -43,6 +44,9 @@ const router = createBrowserRouter([
         path: "/books/PerfilBook",
         element: <PerfilBook />,
        },{
+        path: "/chat",
+        element: <Chat/>,
+      },{
         path: "/register",
         element: <Register />,
       },{
