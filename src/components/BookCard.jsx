@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 import "../styles/BookCard.css";
 import { useState } from "react";
 import { getVoteBooks } from "../api/BookApi";
+import { saveBook } from "../api/BookApi";
 
 function BookCard({ book }) {
-
   const navigate = useNavigate();
 
   function handlePerfil() {
     navigate(`/books/PerfilBook`, { state: { book: book } });
-    
   }
 
   const [likeCount, setLikeCount] = useState(book.like || 0);
@@ -36,10 +35,23 @@ function BookCard({ book }) {
     }
   };
 
+  const handleSave = async () => {
+    if (!token) {
+      alert("Debes iniciar sesión para guardar libros.");
+      return;
+    }
+
+    try {
+      const res = await saveBook(token, book._id);
+      alert(res.message);
+    } catch (error) {
+      console.error("Error al guardar el libro:", error);
+      alert("No se pudo guardar el libro");
+    }
+  };
 
   return (
     <div className="book-card">
-      
       <img src={book.imgBook} alt={book.name} className="book-img" />
       <h2 className="book-title">{book.name}</h2>
       <p className="book-author">
@@ -73,8 +85,12 @@ function BookCard({ book }) {
           👎 No me gusta ({dislikeCount})
         </button>
 
-        <button className="action-btn">💾 Guardar</button>
-        <button className="action-btn" onClick={handlePerfil}>📖 Saber más</button>
+        <button className="action-btn" onClick={handleSave}>
+          💾 Guardar
+        </button>
+        <button className="action-btn" onClick={handlePerfil}>
+          📖 Saber más
+        </button>
       </div>
     </div>
   );
