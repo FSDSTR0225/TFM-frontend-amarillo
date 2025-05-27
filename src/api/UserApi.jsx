@@ -31,6 +31,15 @@ export const loginUser = async (data) => {
   return res.json();
   };
 
+
+  export const getUser = async (token) => {
+  const res = await fetch(`http://localhost:3000/users`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+  });
+  return res.json();
+
+  }
   
 
 
