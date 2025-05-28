@@ -61,7 +61,7 @@ export const getVoteBooks = async (token, bookId, voteType) => {
 };
 
 export const saveBook = async (token, bookId) => {
-  const res = await fetch("http://localhost:3000/list/save", {
+  const res = await fetch("http://localhost:3000/lists/save", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export const saveBook = async (token, bookId) => {
 };
 
 export const getSavedBooks = async (token) => {
-  const res = await fetch("http://localhost:3000/list", {
+  const res = await fetch("http://localhost:3000/lists", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
