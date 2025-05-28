@@ -10,14 +10,12 @@ import ErrorPage from "../pages/ErrorPage";
 import ErrorPage2 from "../pages/ErrorPage2";
 import Register from "../pages/register";
 
-
 const router = createBrowserRouter([
-
   {
     // Ruta principal que pillara la estrutura de root.jsx
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />, 
+    errorElement: <ErrorPage />,
     children: [
       // Ejemplo de ruta anidada
       {
@@ -36,24 +34,25 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
-      },{
+      },
+      {
         path: "/login",
         element: <AdvancedForm />,
-      },{
+      },
+      {
         path: "/books/PerfilBook",
         element: <PerfilBook />,
-       },{
+      },
+      {
         path: "/register",
         element: <Register />,
-      },{
-         path: "/*",
+      },
+      {
+        path: "/*",
         element: <ErrorPage2 />,
       },
-
     ],
-
   },
 ]);
-
 
 export default router;
