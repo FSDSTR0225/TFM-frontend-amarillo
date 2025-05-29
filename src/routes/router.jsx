@@ -45,7 +45,8 @@ const router = createBrowserRouter([
         element: <PerfilBook />,
        },{
         path: "/LookFriends",
-        element: <LookFriends/>,
+        // element: <LookFriends/>,
+         element: <Chat/>,
       },{
         path: "LookFriends/chat",
         element: <Chat/>,
