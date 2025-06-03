@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import { useLogin } from "../context/contextLogin";
 import "../styles/Chat.css";
 import InputField from "../components/Input";
+import { useParams } from "react-router-dom";
 
 function Chat() {
   const { register, handleSubmit, reset } = useForm();
@@ -11,13 +12,18 @@ function Chat() {
   const SENDER_NAME = name || "Anonymous";
   const [messages, setMessages] = useState([]);
   const socketRef = useRef();
-
+  const { roomId } = useParams();
+  
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
+
+socketRef.current.emit("chat history", { roomId }); // Enviar un mensaje vacío para iniciar la conexión
+    // Unirse a la sala de chat con el ID del usuario
+
     socketRef.current.on("chat history", (history) => {
       setMessages(history); // reemplaza todo el estado con el historial
     });
-
+    console.log("Conectado ",messages);
     socketRef.current.on("chat message", (msg) => {
       setMessages((prev) => [...prev, msg]);
       // Actualiza el estado si es necesario
@@ -36,6 +42,7 @@ function Chat() {
         id: id,
         text: message,
         sender: SENDER_NAME,
+        roomId: roomId,
       });
       reset();
     }
