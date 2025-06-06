@@ -13,17 +13,21 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const socketRef = useRef();
   const { roomId } = useParams();
+
   
+
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
 
-socketRef.current.emit("chat history", { roomId }); // Enviar un mensaje vacío para iniciar la conexión
+
+    socketRef.current.emit("chat history", { roomId }); // Enviar un mensaje vacío para iniciar la conexión
     // Unirse a la sala de chat con el ID del usuario
 
     socketRef.current.on("chat history", (history) => {
       setMessages(history); // reemplaza todo el estado con el historial
     });
-    console.log("Conectado ",messages);
+
+    console.log("Conectado ", messages);
     socketRef.current.on("chat message", (msg) => {
       setMessages((prev) => [...prev, msg]);
       // Actualiza el estado si es necesario
@@ -48,6 +52,18 @@ socketRef.current.emit("chat history", { roomId }); // Enviar un mensaje vacío 
     }
   };
 
+  function eliminar(idmsg) {
+    socketRef.current.emit("delete message", {
+      iduser: id,
+      id: idmsg,
+      roomId: roomId,
+    });
+
+    setMessages((prevMessages) =>
+    prevMessages.filter((msg) => msg._id !== idmsg)
+  );
+  }
+
   return (
     <div className="chat-container">
       <h1>Nuclio - WebSocket Chat</h1>
@@ -66,6 +82,14 @@ socketRef.current.emit("chat history", { roomId }); // Enviar un mensaje vacío 
             </span>
             <span className="message-sender">{msg.user}:</span>
             <span className="message-text">{msg.text}</span>
+            {msg.userID === id && (
+              <button
+                className="delete-button"
+                onClick={() => eliminar(msg._id)}
+              >
+                X
+              </button>
+            )}
           </div>
         ))}
       </div>
