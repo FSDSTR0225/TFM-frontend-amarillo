@@ -152,7 +152,8 @@ const Profile = () => {
           <img
             src={preview}
             alt="preview"
-            className="w-24 h-24 rounded-full mt-2"
+            className="rounded-full object-cover mt-2"
+            style={{ width: "100px", height: "100px", maxHeight: "100px" }}
           />
         )}
       </div>
