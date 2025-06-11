@@ -33,7 +33,6 @@ export const getBooks = async (token) => {
   return res.json();
   };
 
-
 export const getVoteBooks = async (token, bookId, voteType) => {
   const res = await fetch(`http://localhost:3000/books/${bookId}/vote`, {
     method: "POST",
@@ -44,4 +43,3 @@ export const getVoteBooks = async (token, bookId, voteType) => {
 
   return res.json();
 };
-

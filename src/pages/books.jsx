@@ -44,7 +44,6 @@ function Books() {
 
   // si no hay token no se puede acceder a la pagina
   if (!isLoggedIn) return <p className="loading">Cargando...</p>;
-  if (!book) return <p>No se encontró ningún libro recomendado.</p>;
 
   return (
     <div className="books-container">
