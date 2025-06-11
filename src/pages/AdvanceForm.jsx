@@ -3,11 +3,13 @@ import { useForm } from "react-hook-form";
 import { loginUser } from "../api/UserApi";
 import { useLogin } from "../context/contextLogin";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const AdvancedForm = () => {
   const { register, handleSubmit } = useForm({});
-// conexion con el contexto
+  // conexion con el contexto
   const { addLogin } = useLogin();
+  const { login } = useUser();
   const navigate = useNavigate();
   const onSubmitHandler = async (formData) => {
     console.log("Datos del formulario:", formData);
@@ -19,12 +21,21 @@ const AdvancedForm = () => {
       }
 
       console.log("Login exitosos", result.user);
+
+      const { _id, id, name } = result.user;
       // Aquí  guarda un token y el nombre.
       addLogin({
-        id: result.user.id,
-        name: result.user.name || formData.email,
+        id: _id || id,
+        name: name || formData.email,
         token: result.access_token,
       });
+      login(
+        { ...result.user, _id: result.user._id || result.user.id },
+        result.access_token
+      );
+
+      localStorage.setItem("token", result.access_token); // 🔐 Guarda el token para futuras peticiones
+
       // se va a la pagina principal
       navigate("/");
     } catch (error) {
