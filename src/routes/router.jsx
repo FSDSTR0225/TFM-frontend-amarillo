@@ -13,7 +13,6 @@ import Chat from "../pages/chat";
 import NotFount from "../pages/notFount";
 import LookFriends from "../pages/lookFriends";
 
-
 const router = createBrowserRouter([
   {
     // Ruta principal que pillara la estrutura de root.jsx
@@ -46,7 +45,19 @@ const router = createBrowserRouter([
       {
         path: "/books/PerfilBook",
         element: <PerfilBook />,
-
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/LookFriends",
+        // element: <LookFriends/>,
+        element: <LookFriends />,
+      },
+      {
+        path: "/LookFriends/chat/:roomId",
+        element: <Chat />,
       },
       {
         path: "/register",
@@ -54,22 +65,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/*",
-        element: <ErrorPage2 />,
-
-       },{
-        path: "/LookFriends",
-        // element: <LookFriends/>,
-         element: <LookFriends/>,
-      },{
-        path: "/LookFriends/chat/:roomId",
-        element: <Chat/>,
-      },{
-        path: "/register",
-        element: <Register />,
-      },{
-         path: "/*",
         element: <NotFount />,
-
       },
     ],
   },
