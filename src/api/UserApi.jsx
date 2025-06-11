@@ -33,6 +33,7 @@ export const getUserId = async (token, id) => {
 export const updateUser = async (formData) => {
   const token = localStorage.getItem("token");
 
+
   const res = await fetch(`http://localhost:3000/users/profile`, {
     method: "PUT",
     headers: {
@@ -40,6 +41,17 @@ export const updateUser = async (formData) => {
     },
     body: formData,
   });
+
+
+  export const getUser = async (token) => {
+  const res = await fetch(`http://localhost:3000/users`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+  });
+  return res.json();
+
+  }
+ 
 
   if (!res.ok) {
     const errorData = await res.json();

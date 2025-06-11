@@ -4,11 +4,15 @@ import Books from "../pages/books";
 import Save from "../pages/save";
 import Profile from "../pages/profile";
 import { Root } from "./root";
-import AdvancedForm from "../pages/AdvanceForm";
+import AdvancedForm from "../pages/advanceForm";
 import PerfilBook from "../pages/PerfilBook";
-import ErrorPage from "../pages/ErrorPage";
-import ErrorPage2 from "../pages/ErrorPage2";
+import ErrorPage from "../pages/errorPage";
 import Register from "../pages/register";
+
+import Chat from "../pages/chat";
+import NotFount from "../pages/notFount";
+import LookFriends from "../pages/lookFriends";
+
 
 const router = createBrowserRouter([
   {
@@ -42,6 +46,7 @@ const router = createBrowserRouter([
       {
         path: "/books/PerfilBook",
         element: <PerfilBook />,
+
       },
       {
         path: "/register",
@@ -50,6 +55,21 @@ const router = createBrowserRouter([
       {
         path: "/*",
         element: <ErrorPage2 />,
+
+       },{
+        path: "/LookFriends",
+        // element: <LookFriends/>,
+         element: <LookFriends/>,
+      },{
+        path: "/LookFriends/chat/:roomId",
+        element: <Chat/>,
+      },{
+        path: "/register",
+        element: <Register />,
+      },{
+         path: "/*",
+        element: <NotFount />,
+
       },
     ],
   },

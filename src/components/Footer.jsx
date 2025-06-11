@@ -10,6 +10,9 @@ function Footer() {
             <Link to="/books">Libros recomendados</Link>
           </li>
           <li>
+            <Link to="/LookFriends">Buscar Amigos</Link>
+          </li>
+          <li>
             <Link to="/profile">Perfil</Link>
           </li>
           <li>
