@@ -39,6 +39,16 @@ export const loginUser = async (data) => {
   });
   return res.json();
 
+  };
+
+
+  export const getPreferences = async (token,id) => {
+  const res = await fetch(`http://localhost:3000/users/preferences/${id}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+  });
+  return res.json();
+
   }
   
 

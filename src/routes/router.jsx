@@ -11,6 +11,7 @@ import Register from "../pages/register";
 import Chat from "../pages/chat";
 import NotFount from "../pages/notFount";
 import LookFriends from "../pages/lookFriends";
+import BooksPrueba from "../pages/books copy";
 
 const router = createBrowserRouter([
 
@@ -53,6 +54,9 @@ const router = createBrowserRouter([
       },{
         path: "/register",
         element: <Register />,
+      },{
+         path: "/booksPrueba",
+        element: <BooksPrueba />,
       },{
          path: "/*",
         element: <NotFount />,

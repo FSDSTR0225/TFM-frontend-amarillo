@@ -21,6 +21,9 @@ function Footer() {
           <li>
             <Link to="/">Inicio</Link>
           </li>
+          <li>
+            <Link to="/booksPrueba">prueba</Link>
+          </li>
         </ul>
       </nav>
     </footer>
