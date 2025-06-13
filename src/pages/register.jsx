@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/register.css";
 import { registerUser } from "../api/UserApi.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ function Register() {
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -55,7 +57,8 @@ function Register() {
         newErrors.password = "Debe tener al menos un símbolo especial.";
       }
       if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(formData.password)) {
-        newErrors.password = "Debe tener al menos una letra minúscula, una letra mayúscula.";
+        newErrors.password =
+          "Debe tener al menos una letra minúscula, una letra mayúscula.";
       }
     }
 
@@ -83,6 +86,8 @@ function Register() {
 
       localStorage.setItem("user", JSON.stringify(formData));
       setSubmitted(true);
+
+      navigate("/profile");
     } catch (error) {
       console.error("Error en el registro:", error);
     }
