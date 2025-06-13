@@ -50,6 +50,16 @@ export const loginUser = async (data) => {
   return res.json();
 
   }
+
+    export const postPreferences = async (token,id,data) => {
+  const res = await fetch(`http://localhost:3000/users/preferences/${id}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    body: JSON.stringify({ voteType: data }),
+  });
+  return res.json();
+
+  }
   
 
 

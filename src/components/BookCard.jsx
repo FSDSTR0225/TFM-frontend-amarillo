@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/BookCard.css";
 import { useState } from "react";
 import { getVoteBooks } from "../api/BookApi";
+import { postPreferences } from "../api/UserApi";
 
 function BookCard({ book }) {
 
@@ -35,6 +36,11 @@ function BookCard({ book }) {
       console.error("Error al votar:", error);
     }
   };
+  const preferences = async (voteType) => {
+     const res = await postPreferences(token, book._id, voteType);
+
+     console.log("preferncia enviada", res);
+  }
 
 
   return (
@@ -60,6 +66,7 @@ function BookCard({ book }) {
           className="action-btn"
           onClick={() => {
             handleVote("like");
+            preferences("like");
           }}
         >
           👍 Me gusta ({likeCount})
@@ -68,6 +75,7 @@ function BookCard({ book }) {
           className="action-btn"
           onClick={() => {
             handleVote("dislike");
+             preferences("dislike");
           }}
         >
           👎 No me gusta ({dislikeCount})
