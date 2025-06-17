@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
 import "../styles/Books.css";
 import { getBooks } from "../api/BookApi";
-import { getPreferences } from "../api/UserApi";
+import { getLikes, getPreferences } from "../api/UserApi";
 import { useLogin } from "../context/contextLogin";
 import { useLocation } from "react-router-dom";
 
@@ -10,8 +10,8 @@ function BooksPrueba() {
   const [book, setBook] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   //conexion con el contexto
-  const { token, isLoggedIn,id } = useLogin();
-    const location = useLocation();
+  const { token, isLoggedIn, id } = useLogin();
+  const location = useLocation();
   const { idBook } = location.state || {};
 
   useEffect(() => {
@@ -19,28 +19,44 @@ function BooksPrueba() {
       try {
         // mado el token al api
         const response = await getBooks(token);
-        // setBook(response);
-         const prefe = await getPreferences(token, id);
-
+       
+        const prefe = await getPreferences(token, id);
+        const likes = await getLikes(token, id);
+        console.log("Likes:", likes);
         // obtenemos la lista de autores preferidos
         const autoresPref = prefe.authors || [];
         const genresPref = prefe.genres || [];
+        const languagePref = prefe.language || [];
 
         console.log("Autores preferidos:", autoresPref);
         // filtramos por autor (primero)
-        const filtrados = response.filter(libro =>
-          autoresPref.some(autorPref =>
-            libro.author?.includes(autorPref)
-          )||genresPref.some(genresPref =>
-            libro.genre?.includes(genresPref)
-          )
+        const filtrados = response.filter(
+          (libro) =>
+            autoresPref.some((autorPref) =>
+              libro.author?.includes(autorPref)
+            ) ||
+            genresPref.some((genresPref) =>
+              libro.genre?.includes(genresPref)
+            ) ||
+            languagePref.some((languagePref) =>
+              libro.language?.includes(languagePref)
+            )
         );
-        console.log(filtrados);
+        
+        if (likes.length < 3) {
+        
+          // setBook(response);
+          
+       
+        }else {
+         
+          setBook(filtrados);
+        }
+        
+        
 
-        setBook(filtrados);
-
-         if (idBook) {
-          const idx = response.findIndex(b => b._id === idBook);
+        if (idBook) {
+          const idx = response.findIndex((b) => b._id === idBook);
           if (idx >= 0) setCurrentIndex(idx);
         }
       } catch (err) {
@@ -51,10 +67,6 @@ function BooksPrueba() {
     };
     booksAll();
   }, []);
-
-
-     
-
 
   const handleNext = () => {
     if (currentIndex < book.length - 1) {
@@ -73,7 +85,7 @@ function BooksPrueba() {
         {/* Mostrar el libro actual */}
         {book[currentIndex] && (
           <>
-            <BookCard book={book[currentIndex] } />
+            <BookCard book={book[currentIndex]} />
             {/* Mostrar el botón solo si hay más libros */}
             {currentIndex < book.length - 1 && (
               <button className="next-btn" onClick={handleNext}>
