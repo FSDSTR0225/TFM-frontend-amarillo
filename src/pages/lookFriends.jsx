@@ -54,6 +54,12 @@ function LookFriends() {
       <div className="container">
         {filteredUsers.map((user) => (
           <div key={user._id} >
+            <img
+              src={user.profilePicture || "https://via.placeholder.com/150"}
+              alt={user.name}
+                 class="size-12 aspect-square rounded-full object-cover"
+
+            />
             <h2>{user.name}</h2>
             <p>{user.email}</p>
             <button onClick={() => roomNavegation(id, user._id)}>unirse</button>
