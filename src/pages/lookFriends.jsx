@@ -35,18 +35,18 @@ function LookFriends() {
       },
     });
 
-  }, []);
-
-  // Asegúrate de que el socket esté conectado antes de emitir eventos
-  useEffect(() => {
-   socketRef.current.on("getOnlineUsers", (ids) => {
+    socketRef.current.on("getOnlineUsers", (ids) => {
       setOnlineUsers(ids);
+       console.log("Usuarios en línea:", ids);
     });
     console.log(onlineUsers);
     return () => {
       socketRef.current.disconnect();
     };
-  }, [socketRef]);
+
+  }, []);
+
+
 
 
 //En tu componente LookFriends, estás creando una nueva conexión de socket cada vez que se llama a roomNavegation, lo cual puede resultar en múltiples conexiones innecesarias.
