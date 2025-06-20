@@ -72,6 +72,7 @@ function BooksPrueba() {
     if (currentIndex < book.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
+    //meter el fitro aquí 
   };
 
   // si no hay token no se puede acceder a la pagina
