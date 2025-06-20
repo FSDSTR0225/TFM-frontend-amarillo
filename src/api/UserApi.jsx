@@ -53,7 +53,7 @@ export const updateUser = async (formData) => {
 };
 
 export const getUser = async (token) => {
-  const res = await fetch(`http://localhost:3000/users`, {
+  const res = await fetch(`http://localhost:3000/users/all`, {
     method: "GET",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });

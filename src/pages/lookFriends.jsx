@@ -10,6 +10,7 @@ function LookFriends() {
   const [searchTerm, setSearchTerm] = useState("");
   const socketRef = useRef();
   const navigate = useNavigate();
+  const [onlineUsers, setOnlineUsers] = useState([]); // IDs online
 
   const fetchUserData = async () => {
     try {
@@ -28,10 +29,29 @@ function LookFriends() {
   );
   useEffect(() => {
     fetchUserData();
+     socketRef.current = io("http://localhost:3000", {
+      query: {
+        userId: id,
+      },
+    });
+
   }, []);
+
+  // Asegúrate de que el socket esté conectado antes de emitir eventos
+  useEffect(() => {
+   socketRef.current.on("getOnlineUsers", (ids) => {
+      setOnlineUsers(ids);
+    });
+    console.log(onlineUsers);
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, [socketRef]);
+
+
 //En tu componente LookFriends, estás creando una nueva conexión de socket cada vez que se llama a roomNavegation, lo cual puede resultar en múltiples conexiones innecesarias.
   function roomNavegation(userId, friendId) {
-    socketRef.current = io("http://localhost:3000");
+   
 
     // Emitir el evento para unirse a la sala
     socketRef.current.emit("room join", { userid1: userId, userid2: friendId });
@@ -60,6 +80,11 @@ function LookFriends() {
                  class="size-12 aspect-square rounded-full object-cover"
 
             />
+             {onlineUsers.includes(user._id) ? (
+      <span className="online-indicator">🟢 En línea</span>
+    ) : (
+      <span className="offline-indicator">⚪️ Offline</span>
+    )}
             <h2>{user.name}</h2>
             <p>{user.email}</p>
             <button onClick={() => roomNavegation(id, user._id)}>unirse</button>
