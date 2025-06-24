@@ -1,22 +1,22 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, /*useRef,*/ useState } from "react";
 import { useForm } from "react-hook-form";
 import { io } from "socket.io-client";
 import { useLogin } from "../context/contextLogin";
 import "../styles/Chat.css";
 import InputField from "../components/Input";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, /*useParams*/ } from "react-router-dom";
 import { getBooks } from "../api/BookApi";
 
-function Chat() {
+function Chat( {socket,roomId}) {
   const { register, handleSubmit, reset } = useForm();
   const { name, id, token } = useLogin();
   const SENDER_NAME = name || "Anonymous";
   const [messages, setMessages] = useState([]);
-  const socketRef = useRef();
-  const { roomId } = useParams();
+   const socketRef =socket.current;
+  // const { roomId } = useParams();
   const [showBooks, setShowBooks] = useState(false);
   const [books, setbooks] = useState([]);
-  const navigate = useNavigate();
+   const navigate = useNavigate();
 
   const fetchBooks = async () => {
     try {
@@ -48,7 +48,7 @@ function Chat() {
     return () => {
       socketRef.current.disconnect();
     };
-  }, []);
+  }, [socket, roomId]);
 
   const onSubmitHandler = (data) => {
     const message = data.message.trim();
