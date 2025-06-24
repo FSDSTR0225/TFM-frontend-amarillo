@@ -14,46 +14,47 @@ function BooksPrueba() {
   const location = useLocation();
   const { idBook } = location.state || {};
 
+  const filtro = async (response) => {
+    try {
+      const prefe = await getPreferences(token, id);
+
+      // obtenemos la lista de autores preferidos
+      const autoresPref = prefe.authors || [];
+      // const genresPref = prefe.genres || [];
+      // const languagePref = prefe.language || [];
+
+      console.log("Autores preferidos:", autoresPref);
+      // filtramos por autor (primero)
+      const filtrados = response.filter(
+        (libro) =>
+          autoresPref.some((autorPref) => libro.author?.includes(autorPref)) // ||
+        // genresPref.some((genresPref) => libro.genre?.includes(genresPref)) ||
+        // languagePref.some((languagePref) =>
+        //   libro.language?.includes(languagePref)
+        // )
+      );
+      console.log("Libros filtrados1:", filtrados);
+      return filtrados;
+    } catch (err) {
+      console.log(err);
+
+      //  navigate("/error500");
+    }
+  };
+
   useEffect(() => {
     const booksAll = async () => {
       try {
         // mado el token al api
         const response = await getBooks(token);
-       
-        const prefe = await getPreferences(token, id);
         const likes = await getLikes(token, id);
         console.log("Likes:", likes);
-        // obtenemos la lista de autores preferidos
-        const autoresPref = prefe.authors || [];
-        const genresPref = prefe.genres || [];
-        const languagePref = prefe.language || [];
-
-        console.log("Autores preferidos:", autoresPref);
-        // filtramos por autor (primero)
-        const filtrados = response.filter(
-          (libro) =>
-            autoresPref.some((autorPref) =>
-              libro.author?.includes(autorPref)
-            ) ||
-            genresPref.some((genresPref) =>
-              libro.genre?.includes(genresPref)
-            ) ||
-            languagePref.some((languagePref) =>
-              libro.language?.includes(languagePref)
-            )
-        );
-        
-        if (likes.length < 3) {
-        
-          // setBook(response);
-          
-       
-        }else {
-         
+        if (likes.length >= 3) {
+          const filtrados = await filtro(response);
           setBook(filtrados);
         }
-        
-        
+
+         setBook(response);
 
         if (idBook) {
           const idx = response.findIndex((b) => b._id === idBook);
@@ -62,17 +63,25 @@ function BooksPrueba() {
       } catch (err) {
         console.log(err);
 
-        //  navigate("/error500");
+        
       }
     };
     booksAll();
   }, []);
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    const likes = await getLikes(token, id);
+    if (likes.length >= 3) {
+      const filtrados = await filtro(book);
+      setBook(filtrados);
+    } else {
+      setBook(book);
+    }
+
     if (currentIndex < book.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
-    //meter el fitro aquí 
+    //meter el fitro aquí
   };
 
   // si no hay token no se puede acceder a la pagina
