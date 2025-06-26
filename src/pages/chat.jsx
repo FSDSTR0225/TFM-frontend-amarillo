@@ -2,21 +2,21 @@ import { useEffect, /*useRef,*/ useState } from "react";
 import { useForm } from "react-hook-form";
 import { io } from "socket.io-client";
 import { useLogin } from "../context/contextLogin";
-import "../styles/Chat.css";
+// import "../styles/Chat.css";
 import InputField from "../components/Input";
-import { useNavigate, /*useParams*/ } from "react-router-dom";
+import { useNavigate /*useParams*/ } from "react-router-dom";
 import { getBooks } from "../api/BookApi";
 
-function Chat( {socket,roomId}) {
+function Chat({ socket, roomId }) {
   const { register, handleSubmit, reset } = useForm();
   const { name, id, token } = useLogin();
   const SENDER_NAME = name || "Anonymous";
   const [messages, setMessages] = useState([]);
-   const socketRef =socket.current;
+  const socketRef = socket.current;
   // const { roomId } = useParams();
   const [showBooks, setShowBooks] = useState(false);
   const [books, setbooks] = useState([]);
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const fetchBooks = async () => {
     try {
@@ -77,7 +77,6 @@ function Chat( {socket,roomId}) {
     );
   }
   function messagePerfil(book) {
-   
     socketRef.current.emit("chat message", {
       id: id,
       text: "Perfil de " + book.name,
@@ -91,53 +90,88 @@ function Chat( {socket,roomId}) {
     console.log("ID del libro seleccionado:", bookid);
     const book = books.find((msg) => msg._id === bookid);
     console.log("Libro seleccionado:", book);
-    navigate(`/books/PerfilBook`, { state: {  book } });
+    navigate(`/books/PerfilBook`, { state: { book } });
   }
 
   return (
-    <div className="chat-container">
-      <h1>Nuclio - WebSocket Chat</h1>
+    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <div className="bg-white shadow-lg border-b  border-gray-200 px-6 py-4">
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+              <span className="text-white font-semibold text-lg">
+                 <img src="../public/vite.svg" class="rounded-full" />
+              </span>
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800 text-lg">{name}</p>
+            <p className="text-sm text-gray-500">ID: {id}</p>
+          </div>
+        </div>
+      </div>
 
-      <div className="messages">
+      {/* Chat Messages */}
+      <div className="py-8 px-20 " >
+    
         {messages.map(
           (msg, index) => (
             console.log("Mensaje recibido:", msg),
             (
-              <div key={index} className="message">
-                <span className="message-time">
-                  {new Date(msg.createdAt).toLocaleString("es-ES", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-                <span className="message-sender">{msg.user}:</span>
+              <div key={index}  className={`flex ${msg.userID === id ? 'justify-end' : 'justify-start'} mb-8`}>
+                <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                  msg.userID === id 
+                    ? 'bg-blue-500 text-white rounded-br-md' 
+                    : 'bg-white text-gray-800 rounded-bl-md border border-gray-200'
+                }`}>
+              <img className="rounded-full w-12 h-12 " src="../public/vite.svg"></img>
+               
+              
                 <span className="message-text">{msg.text}</span>
                 {msg.bookID && (
                   <button
-                    className="book-button"
+                    className={`p-4 block    
+                      
+                     ${
+                  msg.userID === id ? 'hover:text-white hover:bg-blue-600': 'hover:text-gray hover:bg-gray-200'}
+                      
+                      
+                      rounded-full`}
                     onClick={() => handlePerfil(msg.bookID)}
                   >
-                    {" "}
-                    Perfil del libro 📚{" "}
+                   
+                    Perfil del libro 📚
                   </button>
                 )}
 
                 {msg.userID === id && (
                   <button
-                    className="delete-button"
+                    className="block border-red-500 bg-red-500 rounded-full hover:text-white hover:bg-red-700 w-5 h-5  text-center"
                     onClick={() => eliminar(msg._id)}
                   >
                     X
                   </button>
                 )}
+                 <span className="text-xs font-medium text-black-500 block">
+                  {new Date(msg.createdAt).toLocaleString("es-ES", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                </div>
               </div>
             )
           )
         )}
+   
       </div>
+
+
+      {/* Input Form */}
       <form onSubmit={handleSubmit(onSubmitHandler)} className="input-form">
         <InputField
           type="text"
@@ -145,7 +179,7 @@ function Chat( {socket,roomId}) {
           register={register}
           placeholder="Type a message..."
         />
-        <button onClick={() => setShowBooks(!showBooks)}> 📚 Libros </button>
+        <button onClick={() => setShowBooks(!showBooks)}> 📚 </button>
 
         {showBooks && (
           <div className="book-list">
@@ -170,6 +204,7 @@ function Chat( {socket,roomId}) {
         <button type="submit">Send</button>
       </form>
     </div>
+    
   );
 }
 

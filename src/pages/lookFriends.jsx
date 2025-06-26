@@ -73,7 +73,7 @@ function LookFriends() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <section class="h-screen flex overflow-hidden">
-        <div class="bg-white w-3/12 p-6">
+        <div class="bg-white w-2/12">
           <h2>CHAT LIST</h2>
           <div name="chatList" class=" flex flex-col gap-2 overflow-auto">
             {filteredUsers.map((user) => (
@@ -99,7 +99,7 @@ function LookFriends() {
             ))}
           </div>
         </div>
-        <div class="bg-gray-100 w-9/12">
+        <div class="bg-gray-100 w-8/10">
           {showChat ? (
             <Chat  socket={socketRef} roomId={roomID} />
           ) : (
@@ -109,27 +109,6 @@ function LookFriends() {
           )}
         </div>
       </section>
-
-      {/* <div className="container">
-        {filteredUsers.map((user) => (
-          <div key={user._id} >
-            <img
-              src={user.profilePicture || "https://via.placeholder.com/150"}
-              alt={user.name}
-                 class="size-12 aspect-square rounded-full object-cover"
-
-            />
-             {onlineUsers.includes(user._id) ? (
-      <span className="online-indicator">🟢 En línea</span>
-    ) : (
-      <span className="offline-indicator">⚪️ Offline</span>
-    )}
-            <h2>{user.name}</h2>
-            <p>{user.email}</p>
-            <button onClick={() => roomNavegation(id, user._id)}>unirse</button>
-          </div>
-        ))}
-      </div> */}
     </>
   );
 }
