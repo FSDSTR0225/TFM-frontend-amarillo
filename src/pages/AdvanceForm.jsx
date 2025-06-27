@@ -29,10 +29,7 @@ const AdvancedForm = () => {
         name: name || formData.email,
         token: result.access_token,
       });
-      login(
-        { ...result.user, _id: result.user._id || result.user.id },
-        result.access_token
-      );
+      login({ ...result.user, _id: result.user._id || result.user.id }, result.access_token);
 
       localStorage.setItem("token", result.access_token); // 🔐 Guarda el token para futuras peticiones
 
@@ -44,25 +41,28 @@ const AdvancedForm = () => {
   };
 
   return (
-    <div>
-      <h1>Formulario Avanzado</h1>
-      <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <label>Email:</label>
+    <div className="flex flex-col justify-center items-center bg-[#FFFFFF] p-[50px] min-h-screen">
+      <h1 className="text-4xl font-bold font-serif text-[#280f91] m-[20px]">Inicia Sesión</h1>
+
+      <form onSubmit={handleSubmit(onSubmitHandler)} className="flex flex-col bg-[#f4f6ff] p-[30px] rounded-2xl shadow-md w-full max-w-md">
+        <label className="font-serif font-semibold mb-1 text-[#280f91]">Email:</label>
         <input
           type="email"
+          className="p-2 border border-[#ccc] rounded mb-3 font-serif"
           {...register("email", {
             required: true,
             message: "El email es requerido",
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "El email no es valido",
+              message: "El email no es válido",
             },
           })}
         />
-        <br />
-        <label>Password:</label>
+
+        <label className="font-serif font-semibold mb-1 text-[#280f91]">Password:</label>
         <input
           type="password"
+          className="p-2 border border-[#ccc] rounded mb-3 font-serif"
           {...register("password", {
             required: true,
             minLength: {
@@ -71,13 +71,14 @@ const AdvancedForm = () => {
             },
             pattern: {
               value: /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])/,
-              message:
-                "Debe contener al menos un número y un carácter especial",
+              message: "Debe contener al menos un número y un carácter especial",
             },
           })}
         />
-        <br />
-        <button type="submit">Enviar</button>
+
+        <button type="submit" className="bg-[#dce1f9] hover:bg-[#280f91] hover:text-[#dce1f9] text-[#280f91] font-bold font-serif rounded-full p-[10px] mt-4">
+          Enviar
+        </button>
       </form>
     </div>
   );

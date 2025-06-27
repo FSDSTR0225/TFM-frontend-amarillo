@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import BookCard from "../components/BookCard";
-import "../styles/Books.css";
+
 import { getBooks, getGenres, getAuthors, getLanguages } from "../api/BookApi"; // <--- Importar getLanguages
 import { useLogin } from "../context/contextLogin";
 import { useLocation } from "react-router-dom";
@@ -107,33 +107,35 @@ function Books() {
   if (!isLoggedIn) return <p className="loading">Cargando...</p>;
 
   return (
-    <div className="books-container">
-      <h1 className="header">Te apetece leer...</h1>
+    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
+      <h1 className="text-4xl font-serif font-bold text-indigo-800 mb-8">¿Qué te apetece leer?</h1>
 
-      <div className="filters-section">
-        <h2>Filtra tus recomendaciones</h2>
-        {/* PASAR LA PROP languages AL FILTERS PANEL */}
-        <FiltersPanel filters={filters} setFilters={setFilters} genres={genres} authors={authors} languages={languages} /> {/* <--- Pasar languages */}
-        <button className="clear-filters-btn" onClick={handleClearFilters}>
+      <section className="w-full max-w-5xl bg-white shadow-md rounded-lg p-6 mb-8">
+        <FiltersPanel filters={filters} setFilters={setFilters} genres={genres} authors={authors} languages={languages} />
+
+        <button className="bg-[#dce1f9] hover:bg-[#280f91] hover:text-[#dce1f9] text-[#280f91] font-bold font-serif rounded-full p-[10px] mt-4" onClick={handleClearFilters}>
           Limpiar Filtros
         </button>
-      </div>
+      </section>
 
-      <div className="book-card-container">
-        {books.length === 0 && filtersCurrentlyApplied && <p>No hay resultados para estos criterios de búsqueda.</p>}
-        {books.length === 0 && !filtersCurrentlyApplied && <p>No se encontró ningún libro recomendado en nuestra base de datos.</p>}
+      <section className="w-full max-w-3xl flex flex-col items-center">
+        {books.length === 0 && filtersCurrentlyApplied && <p className="text-center text-gray-500">No hay resultados para estos criterios de búsqueda.</p>}
+        {books.length === 0 && !filtersCurrentlyApplied && <p className="text-center text-gray-500">No se encontró ningún libro recomendado en nuestra base de datos.</p>}
 
         {books[currentIndex] && (
           <>
-            <BookCard book={books[currentIndex]} />
+            <div className="w-full">
+              <BookCard book={books[currentIndex]} />
+            </div>
+
             {currentIndex < books.length - 1 && (
-              <button className="next-btn" onClick={handleNext}>
+              <button className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded shadow-lg transition" onClick={handleNext}>
                 Siguiente
               </button>
             )}
           </>
         )}
-      </div>
+      </section>
     </div>
   );
 }
