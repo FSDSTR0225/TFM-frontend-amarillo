@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import BookCard from "../components/BookCard";
 import "../styles/Books.css";
-import { getBooks, getGenres, getAuthors, getLanguages } from "../api/BookApi"; // <--- Importar getLanguages
+import { getBooks, getGenres, getAuthors, getLanguages } from "../api/BookApi";
 import { useLogin } from "../context/contextLogin";
 import { useLocation } from "react-router-dom";
 import FiltersPanel from "../components/FiltersPanel";
@@ -13,37 +13,34 @@ function Books() {
   const [filters, setFilters] = useState({
     name: "",
     genre: [],
-    language: "", // Sigue siendo una cadena para el select simple
+    language: "",
     author: [],
   });
   const [filtersCurrentlyApplied, setFiltersCurrentlyApplied] = useState(false);
-
-  // NUEVO ESTADO: para almacenar los idiomas obtenidos de la API
-  const [languages, setLanguages] = useState([]); // <--- Nuevo estado
-
+  const [languages, setLanguages] = useState([]);
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
   const location = useLocation();
   const { idBook } = location.state || {};
 
-  // Cargar géneros, autores Y LENGUAJES desde la API cuando el token está disponible
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Realizamos todas las peticiones en paralelo
         const [genresData, authorsData, languagesData] = await Promise.all([
-          // <--- Añadir languagesData
           getGenres(token),
           getAuthors(token),
-          getLanguages(token), // <--- Llamada a la nueva función
+          getLanguages(token),
         ]);
         console.log("Genres desde la API:", genresData);
-        console.log("Languages desde la API:", languagesData); // Para depuración
+        console.log("Languages desde la API:", languagesData);
         setGenres(genresData);
         setAuthors(authorsData);
-        setLanguages(["", ...languagesData]); // <--- Guardar idiomas, añadiendo una opción vacía "Todos"
+        setLanguages(["", ...languagesData]);
       } catch (error) {
-        console.error("Error al obtener datos de filtros (géneros/autores/idiomas):", error);
+        console.error(
+          "Error al obtener datos de filtros (géneros/autores/idiomas):",
+          error
+        );
       }
     };
     if (token) fetchData();
@@ -54,18 +51,32 @@ function Books() {
       if (!token) return;
       try {
         const response = await getBooks(token, currentFilters);
+
+        if (!Array.isArray(response)) {
+          console.error("getBooks no devolvió un array:", response);
+          setBooks([]);
+          return;
+        }
+
         setBooks(response);
-        const isInitialOrClearedFilter = !currentFilters.name && currentFilters.genre.length === 0 && !currentFilters.language && currentFilters.author.length === 0;
+
+        const isInitialOrClearedFilter =
+          !currentFilters.name &&
+          Array.isArray(currentFilters.genre) &&
+          currentFilters.genre.length === 0 &&
+          !currentFilters.language &&
+          Array.isArray(currentFilters.author) &&
+          currentFilters.author.length === 0;
 
         if (idBook && isInitialOrClearedFilter) {
           const idx = response.findIndex((b) => b._id === idBook);
-          if (idx >= 0) setCurrentIndex(idx);
-          else setCurrentIndex(0);
+          setCurrentIndex(idx >= 0 ? idx : 0);
         } else if (shouldResetIndex) {
           setCurrentIndex(0);
         }
       } catch (err) {
         console.error("Error al obtener los libros:", err);
+        setBooks([]);
       }
     },
     [token, idBook]
@@ -77,7 +88,12 @@ function Books() {
   }, [token, fetchBooks]);
 
   useEffect(() => {
-    const areFiltersActive = filters.name || filters.genre.length > 0 || filters.language || filters.author.length > 0;
+    const areFiltersActive =
+      filters.name ||
+      (Array.isArray(filters.genre) && filters.genre.length > 0) ||
+      filters.language ||
+      (Array.isArray(filters.author) && filters.author.length > 0);
+
     if (areFiltersActive) {
       fetchBooks(filters, true);
       setFiltersCurrentlyApplied(true);
@@ -90,8 +106,8 @@ function Books() {
   }, [filters, fetchBooks, filtersCurrentlyApplied]);
 
   const handleNext = () => {
-    if (currentIndex < books.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
+    if (books.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % books.length);
     }
   };
 
@@ -112,25 +128,34 @@ function Books() {
 
       <div className="filters-section">
         <h2>Filtra tus recomendaciones</h2>
-        {/* PASAR LA PROP languages AL FILTERS PANEL */}
-        <FiltersPanel filters={filters} setFilters={setFilters} genres={genres} authors={authors} languages={languages} /> {/* <--- Pasar languages */}
+        <FiltersPanel
+          filters={filters}
+          setFilters={setFilters}
+          genres={genres}
+          authors={authors}
+          languages={languages}
+        />
         <button className="clear-filters-btn" onClick={handleClearFilters}>
           Limpiar Filtros
         </button>
       </div>
 
       <div className="book-card-container">
-        {books.length === 0 && filtersCurrentlyApplied && <p>No hay resultados para estos criterios de búsqueda.</p>}
-        {books.length === 0 && !filtersCurrentlyApplied && <p>No se encontró ningún libro recomendado en nuestra base de datos.</p>}
+        {books?.length === 0 && filtersCurrentlyApplied && (
+          <p>No hay resultados para estos criterios de búsqueda.</p>
+        )}
+        {books?.length === 0 && !filtersCurrentlyApplied && (
+          <p>
+            No se encontró ningún libro recomendado en nuestra base de datos.
+          </p>
+        )}
 
-        {books[currentIndex] && (
+        {books?.[currentIndex] && (
           <>
             <BookCard book={books[currentIndex]} />
-            {currentIndex < books.length - 1 && (
-              <button className="next-btn" onClick={handleNext}>
-                Siguiente
-              </button>
-            )}
+            <button className="next-btn" onClick={handleNext}>
+              Siguiente
+            </button>
           </>
         )}
       </div>

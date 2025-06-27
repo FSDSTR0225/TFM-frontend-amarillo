@@ -10,23 +10,29 @@ export const getBooks = async (token, filters = {}) => {
   }
   // Para género (que es un array en el backend y en el frontend cuando se selecciona múltiple)
   if (filters.genre && filters.genre.length > 0) {
-    queryParams.append("genre", filters.genre.join(",")); // Unir el array con comas
+    filters.genre.forEach((g) => queryParams.append("genre", g));
   }
+
   // Para idioma (que es una cadena simple)
   if (filters.language) {
     queryParams.append("language", filters.language);
   }
   // Para autor (que es un array en el backend y en el frontend cuando se selecciona múltiple)
   if (filters.author && filters.author.length > 0) {
-    queryParams.append("author", filters.author.join(",")); // Unir el array con comas
+    filters.author.forEach((a) => queryParams.append("author", a));
   }
 
   // Si hay parámetros en queryParams, añádelos a la URL base con '?', de lo contrario, usa solo la URL base
-  const url = `http://localhost:3000/books${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+  const url = `http://localhost:3000/books${
+    queryParams.toString() ? `?${queryParams.toString()}` : ""
+  }`;
 
   const res = await fetch(url, {
     method: "GET",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
   });
   return res.json();
 };
@@ -34,7 +40,10 @@ export const getBooks = async (token, filters = {}) => {
 export const Bookdata = async (token, id) => {
   const res = await fetch(`http://localhost:3000/books/${id}`, {
     method: "GET",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
   });
   return res.json();
 };
@@ -42,24 +51,36 @@ export const Bookdata = async (token, id) => {
 export const rewiusBook = async (data, token, id) => {
   const res = await fetch(`http://localhost:3000/books/review/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
     body: JSON.stringify(data),
   });
   return res.json();
 };
 
 export const deleteRewius = async (data, token, id) => {
-  const res = await fetch(`http://localhost:3000/books/review/${id}?reviewId=${data}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
-  });
+  const res = await fetch(
+    `http://localhost:3000/books/review/${id}?reviewId=${data}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + token,
+      },
+    }
+  );
   return res.json();
 };
 
 export const getVoteBooks = async (token, bookId, voteType) => {
   const res = await fetch(`http://localhost:3000/books/${bookId}/vote`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
 
     body: JSON.stringify({ vote: voteType }),
   });
