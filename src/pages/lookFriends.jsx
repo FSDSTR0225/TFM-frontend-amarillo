@@ -3,7 +3,7 @@ import { getUser } from "../api/UserApi";
 import { useLogin } from "../context/contextLogin";
 import { io } from "socket.io-client";
 // import { useNavigate } from "react-router-dom";
-import Chat from "./chat";
+import Chat from "../components/chat";
 
 function LookFriends() {
   const [userData, setUserData] = useState([]);
@@ -14,6 +14,7 @@ function LookFriends() {
   const [onlineUsers, setOnlineUsers] = useState([]); // IDs online
   const [showChat, setShowChat] = useState(false);
   const [roomID, setroomID] = useState("");
+  const [userFriends, setuserFriends] = useState([]);
 
   const fetchUserData = async () => {
     try {
@@ -49,9 +50,9 @@ function LookFriends() {
   }, []);
 
   //En tu componente LookFriends, estás creando una nueva conexión de socket cada vez que se llama a roomNavegation, lo cual puede resultar en múltiples conexiones innecesarias.
-  function roomNavegation(userId, friendId) {
+  function roomNavegation(userId, friend) {
     // Emitir el evento para unirse a la sala
-    socketRef.current.emit("room join", { userid1: userId, userid2: friendId });
+    socketRef.current.emit("room join", { userid1: userId, userid2: friend._id });
 
     // Escuchar la respuesta del servidor con la ID de la sala
     socketRef.current.on("room joined", ({ roomId }) => {
@@ -59,6 +60,7 @@ function LookFriends() {
      
         setroomID(roomId);
         setShowChat(true);
+        setuserFriends( friend );
       
     });
   }
@@ -80,7 +82,7 @@ function LookFriends() {
               <div
                 name="chatItem"
                 className="flex  items-start gap-4  cursor-pointer hover:bg-gray-200 p-2"
-                onClick={() => roomNavegation(id, user._id)}
+                onClick={() => roomNavegation(id, user)}
               >
                 <img
                   src={user.profilePicture || "https://via.placeholder.com/150"}
@@ -101,7 +103,7 @@ function LookFriends() {
         </div>
         <div class="bg-gray-100 w-8/10">
           {showChat ? (
-            <Chat  socket={socketRef} roomId={roomID} />
+            <Chat userFriends={userFriends} oline={onlineUsers} socket={socketRef} roomId={roomID} />
           ) : (
             <div className="flex items-center justify-center h-full">
               <p className="text-gray-500">Selecciona un chat para comenzar</p>

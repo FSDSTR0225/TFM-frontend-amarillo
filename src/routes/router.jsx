@@ -8,8 +8,6 @@ import AdvancedForm from "../pages/advanceForm";
 import PerfilBook from "../pages/PerfilBook";
 import ErrorPage from "../pages/errorPage";
 import Register from "../pages/register";
-
-import Chat from "../pages/chat";
 import NotFount from "../pages/notFount";
 import LookFriends from "../pages/lookFriends";
 
@@ -54,10 +52,6 @@ const router = createBrowserRouter([
         path: "/LookFriends",
         // element: <LookFriends/>,
         element: <LookFriends />,
-      },
-      {
-        path: "/LookFriends/chat/:roomId",
-        element: <Chat />,
       },
       {
         path: "/register",
