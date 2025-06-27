@@ -67,9 +67,11 @@ function LookFriends() {
 
   return (
     <>
-      <h1>Look Friends</h1>
+      <h1 className="text-2xl font-bold mb-4 ">Look Friends</h1>
       <input
         type="text"
+        className=" px-4 py-3 border border-gray-300 rounded-full  focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+
         placeholder="Buscar por nombre..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
