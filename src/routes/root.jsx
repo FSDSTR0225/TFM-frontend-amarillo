@@ -7,6 +7,8 @@ export const Root = () => {
   return (
     //Estructura de la pagina principal, donde se puede añadir un header y un footer
     <>
+    
+{/* para que el useffet funcione  */}
       <LoginProvider>
         <div className="flex flex-col min-h-screen bg-base-100">
           <Header />

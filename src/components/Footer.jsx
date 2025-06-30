@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { BookOpen, Users, User, Bookmark } from "lucide-react";
 
 function Footer() {
+    // if con el islogin
   return (
     <footer className="w-full bg-base-100 border-t border-base-200">
       <nav className="flex justify-around items-center py-2">
