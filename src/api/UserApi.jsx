@@ -1,5 +1,7 @@
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const registerUser = async (data) => {
-  const res = await fetch("http://localhost:3000/users/register", {
+  const res = await fetch(`${backendUrl}/users/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -9,7 +11,7 @@ export const registerUser = async (data) => {
 };
 
 export const loginUser = async (data) => {
-  const res = await fetch("http://localhost:3000/users/login", {
+  const res = await fetch(`${backendUrl}/users/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -19,7 +21,7 @@ export const loginUser = async (data) => {
 };
 
 export const getUserId = async (token, id) => {
-  const res = await fetch(`http://localhost:3000/users/${id}`, {
+  const res = await fetch(`${backendUrl}/users/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +35,7 @@ export const getUserId = async (token, id) => {
 export const updateUser = async (formData) => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`http://localhost:3000/users/profile`, {
+  const res = await fetch(`${backendUrl}/users/profile`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -53,7 +55,7 @@ export const updateUser = async (formData) => {
 };
 
 export const getUser = async (token) => {
-  const res = await fetch(`http://localhost:3000/users/all`, {
+  const res = await fetch(`${backendUrl}/users/all`, {
     method: "GET",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });

@@ -1,3 +1,5 @@
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const getBooks = async (token, filters = {}) => {
   // filters es opcional y por defecto un objeto vacío
   // Construir la URL con los parámetros de consulta
@@ -22,7 +24,7 @@ export const getBooks = async (token, filters = {}) => {
   }
 
   // Si hay parámetros en queryParams, añádelos a la URL base con '?', de lo contrario, usa solo la URL base
-  const url = `http://localhost:3000/books${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+  const url = `${backendUrl}/books${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
 
   const res = await fetch(url, {
     method: "GET",
@@ -32,7 +34,7 @@ export const getBooks = async (token, filters = {}) => {
 };
 
 export const Bookdata = async (token, id) => {
-  const res = await fetch(`http://localhost:3000/books/${id}`, {
+  const res = await fetch(`${backendUrl}/books/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
@@ -40,7 +42,7 @@ export const Bookdata = async (token, id) => {
 };
 
 export const rewiusBook = async (data, token, id) => {
-  const res = await fetch(`http://localhost:3000/books/review/${id}`, {
+  const res = await fetch(`${backendUrl}/books/review/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
     body: JSON.stringify(data),
@@ -49,7 +51,7 @@ export const rewiusBook = async (data, token, id) => {
 };
 
 export const deleteRewius = async (data, token, id) => {
-  const res = await fetch(`http://localhost:3000/books/review/${id}?reviewId=${data}`, {
+  const res = await fetch(`${backendUrl}/books/review/${id}?reviewId=${data}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
@@ -57,7 +59,7 @@ export const deleteRewius = async (data, token, id) => {
 };
 
 export const getVoteBooks = async (token, bookId, voteType) => {
-  const res = await fetch(`http://localhost:3000/books/${bookId}/vote`, {
+  const res = await fetch(`${backendUrl}/books/${bookId}/vote`, {
     method: "POST",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
 
@@ -68,7 +70,7 @@ export const getVoteBooks = async (token, bookId, voteType) => {
 };
 //peticiones para obtener géneros y autores
 export async function getGenres(token) {
-  const response = await fetch("http://localhost:3000/books/genres", {
+  const response = await fetch(`${backendUrl}/books/genres`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -79,7 +81,7 @@ export async function getGenres(token) {
 }
 
 export async function getAuthors(token) {
-  const response = await fetch("http://localhost:3000/books/authors", {
+  const response = await fetch(`${backendUrl}/books/authors`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -91,7 +93,7 @@ export async function getAuthors(token) {
 
 //Función Para obtener idiomas únicos
 export async function getLanguages(token) {
-  const response = await fetch("http://localhost:3000/books/languages", {
+const response = await fetch(`${backendUrl}/books/languages`, {
     // <-- Nueva ruta en el backend
     headers: {
       "Content-Type": "application/json",
