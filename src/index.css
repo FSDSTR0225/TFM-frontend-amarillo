@@ -1,6 +1,8 @@
+
 @import "tailwindcss";
 
 @plugin "daisyui";
+
 
 /* Importa los estilos base y los restablecimientos (resets) de CSS que Tailwind aplica  */
 @tailwind base;
@@ -8,6 +10,15 @@
 @tailwind components;
 /*  clases listas para usar que permiten dar estilo directamente a los elementos sin escribir CSS extra. */
 @tailwind utilities;
+
+
+
+button {
+
+  cursor: pointer;
+}
+
+
 
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
