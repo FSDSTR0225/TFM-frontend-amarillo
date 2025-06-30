@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/register.css";
+
 import { registerUser } from "../api/UserApi.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -57,8 +57,7 @@ function Register() {
         newErrors.password = "Debe tener al menos un símbolo especial.";
       }
       if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(formData.password)) {
-        newErrors.password =
-          "Debe tener al menos una letra minúscula, una letra mayúscula.";
+        newErrors.password = "Debe tener al menos una letra minúscula, una letra mayúscula.";
       }
     }
 
@@ -94,55 +93,27 @@ function Register() {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-box">
-        <h2 className="register-title">Mooday</h2>
-        <form onSubmit={handleSubmit} className="register-form">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nombre"
-            value={formData.name}
-            onChange={handleChange}
-            autoComplete="given-name"
-          />
-          {errors.name && <p className="error">{errors.name}</p>}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
+      <h2 className="text-4xl font-bold text-center text-[#280f91] font-serif mb-8">¡Regístrate!</h2>
+      <div className="bg-[#f4f6ff] p-10 rounded-2xl shadow-lg w-full max-w-md">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <input type="text" name="name" placeholder="Nombre" value={formData.name} onChange={handleChange} autoComplete="given-name" className="p-2 border border-gray-300 rounded font-serif" />
+          {errors.name && <p className="text-sm text-red-500 font-medium">{errors.name}</p>}
 
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Apellido"
-            value={formData.lastName}
-            onChange={handleChange}
-            autoComplete="family-name"
-          />
-          {errors.lastName && <p className="error">{errors.lastName}</p>}
+          <input type="text" name="lastName" placeholder="Apellido" value={formData.lastName} onChange={handleChange} autoComplete="family-name" className="p-2 border border-gray-300 rounded font-serif" />
+          {errors.lastName && <p className="text-sm text-red-500 font-medium">{errors.lastName}</p>}
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Correo"
-            value={formData.email}
-            onChange={handleChange}
-            autoComplete="email"
-          />
-          {errors.email && <p className="error">{errors.email}</p>}
+          <input type="email" name="email" placeholder="Correo" value={formData.email} onChange={handleChange} autoComplete="email" className="p-2 border border-gray-300 rounded font-serif" />
+          {errors.email && <p className="text-sm text-red-500 font-medium">{errors.email}</p>}
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            value={formData.password}
-            onChange={handleChange}
-            autoComplete="new-password"
-          />
-          {errors.password && <p className="error">{errors.password}</p>}
+          <input type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} autoComplete="new-password" className="p-2 border border-gray-300 rounded font-serif" />
+          {errors.password && <p className="text-sm text-red-500 font-medium">{errors.password}</p>}
 
-          <button type="submit" className="register-button">
+          <button type="submit" className="bg-[#dce1f9] hover:bg-[#280f91] hover:text-[#dce1f9] text-[#280f91] font-bold font-serif rounded-full p-3 mt-2">
             Registrarse
           </button>
 
-          {submitted && <p className="success"></p>}
+          {submitted && <p className="text-green-600 text-center font-serif mt-4">¡Registro exitoso!</p>}
         </form>
       </div>
     </div>
