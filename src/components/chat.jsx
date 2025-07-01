@@ -21,6 +21,7 @@ function Chat({ userFriends, oline, socket, roomId }) {
 
   const fetchBooks = async () => {
     try {
+      // Sacar libros de la API
       const response = await getBooks(token);
       setbooks(response);
     } catch (error) {
@@ -29,6 +30,7 @@ function Chat({ userFriends, oline, socket, roomId }) {
   };
 
   useEffect(() => {
+    // Conectar al socket.io
     socketRef.current = io("http://localhost:3000");
 
     fetchBooks();
@@ -123,7 +125,8 @@ function Chat({ userFriends, oline, socket, roomId }) {
               {userFriends.name}
             </p>
             <small>
-              {oline.includes(userFriends._id) ? "🟢 En línea" : "⚪️ Offline"}
+              {oline.includes(userFriends._id) ? "🟢 En línea" : "⚪️ Offline" }
+             
             </small>
           </div>
         </div>

@@ -25,7 +25,7 @@ export const getBooks = async (token, filters = {}) => {
 
   // Si hay parámetros en queryParams, añádelos a la URL base con '?', de lo contrario, usa solo la URL base
   const url = `${backendUrl}/books${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
-
+//* faltaria una books/ en la url para que funcione y creo que seria mejor ponerlo en otra funcion 
   const res = await fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },

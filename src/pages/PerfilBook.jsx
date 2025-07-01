@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { Bookdata, deleteRewius, rewiusBook } from "../api/BookApi";
 import { getUserId } from "../api/UserApi";
 import InputField from "../components/Input";
-import { validateReview } from "../components/ValidateInput";
+import { validateNumber, validateReview } from "../components/ValidateInput";
 
 function PerfilBook() {
   const {
@@ -162,7 +162,7 @@ function PerfilBook() {
           <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-4">
             <div>
               <label className="block mb-1 font-medium">Tu valoración:</label>
-              <InputField type="number" required={true} name="rating" placeholder="Escribe tu valoración aqui..." register={register} className="w-full border border-gray-300 rounded px-3 py-2" errors={errors} />
+              <InputField type="number" required={true} name="rating" placeholder="Escribe tu valoración aqui..." register={register} validationRules={validateNumber} className="w-full border border-gray-300 rounded px-3 py-2" errors={errors} />
             </div>
 
             <div>

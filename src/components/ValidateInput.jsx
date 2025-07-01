@@ -42,5 +42,13 @@ export const validateReview  = {
     
 }
 
+export const validateNumber = {
+  required: true,
+  pattern: {
+    value: /^(?:[0-9]|10)$/,
+    message: "Solo se puede de 0 a 10.",
+  },
+};
+
 
 
