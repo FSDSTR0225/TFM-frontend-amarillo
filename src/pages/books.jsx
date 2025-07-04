@@ -1,124 +1,118 @@
+// src/pages/Books.jsx
 import { useEffect, useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import BookCard from "../components/BookCard";
-import "../styles/Books.css";
+import FiltersPanel from "../components/FiltersPanel";
 import { getBooks, getGenres, getAuthors, getLanguages } from "../api/BookApi";
 import { useLogin } from "../context/contextLogin";
-import { useLocation } from "react-router-dom";
-import FiltersPanel from "../components/FiltersPanel";
+import "../styles/Books.css";
 
 function Books() {
   const { token, isLoggedIn } = useLogin();
+
   const [books, setBooks] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const [filters, setFilters] = useState({
     name: "",
     genre: [],
     language: "",
     author: [],
   });
-  const [filtersCurrentlyApplied, setFiltersCurrentlyApplied] = useState(false);
+  const [filtersApplied, setFiltersApplied] = useState(false);
+
   const [languages, setLanguages] = useState([]);
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
+
   const location = useLocation();
   const { idBook } = location.state || {};
 
+  /* --- Cargar listas de géneros, autores e idiomas --- */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [genresData, authorsData, languagesData] = await Promise.all([
-          getGenres(token),
-          getAuthors(token),
-          getLanguages(token),
-        ]);
-        console.log("Genres desde la API:", genresData);
-        console.log("Languages desde la API:", languagesData);
-        setGenres(genresData);
-        setAuthors(authorsData);
-        setLanguages(["", ...languagesData]);
-      } catch (error) {
-        console.error(
-          "Error al obtener datos de filtros (géneros/autores/idiomas):",
-          error
-        );
-      }
-    };
-    if (token) fetchData();
+    if (!token) return;
+    (async () => {
+      const [g, a, l] = await Promise.all([
+        getGenres(token),
+        getAuthors(token),
+        getLanguages(token),
+      ]);
+      setGenres(g);
+      setAuthors(a);
+      setLanguages(["", ...l]);
+    })();
   }, [token]);
 
+  /* --- Descargar libros con filtros --- */
   const fetchBooks = useCallback(
-    async (currentFilters, shouldResetIndex = true) => {
+    async (currentFilters, resetIndex = true) => {
       if (!token) return;
-      try {
-        const response = await getBooks(token, currentFilters);
+      const data = await getBooks(token, currentFilters);
+      if (!Array.isArray(data)) return setBooks([]);
 
-        if (!Array.isArray(response)) {
-          console.error("getBooks no devolvió un array:", response);
-          setBooks([]);
-          return;
-        }
+      setBooks(data);
 
-        setBooks(response);
+      const filtersEmpty =
+        !currentFilters.name &&
+        !currentFilters.genre.length &&
+        !currentFilters.language &&
+        !currentFilters.author.length;
 
-        const isInitialOrClearedFilter =
-          !currentFilters.name &&
-          Array.isArray(currentFilters.genre) &&
-          currentFilters.genre.length === 0 &&
-          !currentFilters.language &&
-          Array.isArray(currentFilters.author) &&
-          currentFilters.author.length === 0;
-
-        if (idBook && isInitialOrClearedFilter) {
-          const idx = response.findIndex((b) => b._id === idBook);
-          setCurrentIndex(idx >= 0 ? idx : 0);
-        } else if (shouldResetIndex) {
-          setCurrentIndex(0);
-        }
-      } catch (err) {
-        console.error("Error al obtener los libros:", err);
-        setBooks([]);
+      if (idBook && filtersEmpty) {
+        const idx = data.findIndex((b) => b._id === idBook);
+        setCurrentIndex(idx >= 0 ? idx : 0);
+      } else if (resetIndex) {
+        setCurrentIndex(0);
       }
     },
     [token, idBook]
   );
 
+  /* --- Primera carga --- */
   useEffect(() => {
     fetchBooks({});
-    setFiltersCurrentlyApplied(false);
+    setFiltersApplied(false);
   }, [token, fetchBooks]);
 
+  /* --- Aplicar filtros --- */
   useEffect(() => {
-    const areFiltersActive =
+    const active =
       filters.name ||
-      (Array.isArray(filters.genre) && filters.genre.length > 0) ||
+      filters.genre.length ||
       filters.language ||
-      (Array.isArray(filters.author) && filters.author.length > 0);
+      filters.author.length;
 
-    if (areFiltersActive) {
+    if (active) {
       fetchBooks(filters, true);
-      setFiltersCurrentlyApplied(true);
-    } else {
-      if (filtersCurrentlyApplied) {
-        fetchBooks({}, true);
-        setFiltersCurrentlyApplied(false);
-      }
+      setFiltersApplied(true);
+    } else if (filtersApplied) {
+      fetchBooks({}, true);
+      setFiltersApplied(false);
     }
-  }, [filters, fetchBooks, filtersCurrentlyApplied]);
+  }, [filters, fetchBooks, filtersApplied]);
 
+  //Actualiza los votos de contador
+  const handleVoteUpdate = (id, like, dislike) => {
+    setBooks((prev) =>
+      prev.map((b) => (b._id === id ? { ...b, like, dislike } : b))
+    );
+  };
+
+  //Navegar al siguiente libro
   const handleNext = () => {
-    if (books.length > 0) {
-      setCurrentIndex((prev) => (prev + 1) % books.length);
+    if (books.length) {
+      setCurrentIndex((i) => (i + 1) % books.length);
     }
   };
 
-  const handleClearFilters = () => {
-    setFilters({
-      name: "",
-      genre: [],
-      language: "",
-      author: [],
-    });
+  const handlePrev = () => {
+    if (books.length) {
+      setCurrentIndex((i) => (i - 1 + books.length) % books.length);
+    }
   };
+
+  const handleClearFilters = () =>
+    setFilters({ name: "", genre: [], language: "", author: [] });
 
   if (!isLoggedIn) return <p className="loading">Cargando...</p>;
 
@@ -141,18 +135,28 @@ function Books() {
       </div>
 
       <div className="book-card-container">
-        {books?.length === 0 && filtersCurrentlyApplied && (
+        {books.length === 0 && filtersApplied && (
           <p>No hay resultados para estos criterios de búsqueda.</p>
         )}
-        {books?.length === 0 && !filtersCurrentlyApplied && (
+        {books.length === 0 && !filtersApplied && (
           <p>
             No se encontró ningún libro recomendado en nuestra base de datos.
           </p>
         )}
 
-        {books?.[currentIndex] && (
+        {books[currentIndex] && (
           <>
-            <BookCard book={books[currentIndex]} />
+            <BookCard
+              key={books[currentIndex]._id}
+              book={books[currentIndex]}
+              onVoteUpdate={handleVoteUpdate}
+            />
+
+            {/* NUEVO BOTÓN “Anterior” */}
+            <button className="prev-btn" onClick={handlePrev}>
+              Anterior
+            </button>
+
             <button className="next-btn" onClick={handleNext}>
               Siguiente
             </button>
