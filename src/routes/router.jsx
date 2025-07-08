@@ -11,15 +11,14 @@ import Register from "../pages/register";
 import Chat from "../pages/chat";
 import NotFount from "../pages/notFount";
 import LookFriends from "../pages/lookFriends";
-import BooksPrueba from "../pages/books copy";
+
 
 const router = createBrowserRouter([
-
   {
     // Ruta principal que pillara la estrutura de root.jsx
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />, 
+    errorElement: <ErrorPage />,
     children: [
       // Ejemplo de ruta anidada
       {
@@ -38,31 +37,34 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
-      },{
+      },
+      {
         path: "/login",
         element: <AdvancedForm />,
-      },{
+      },
+      {
         path: "/books/PerfilBook",
         element: <PerfilBook />,
-       },{
+      },
+      {
         path: "/LookFriends",
         // element: <LookFriends/>,
-         element: <LookFriends/>,
-      },{
+        element: <LookFriends />,
+      },
+      {
         path: "/LookFriends/chat/:roomId",
-        element: <Chat/>,
-      },{
+        element: <Chat />,
+      },
+      {
         path: "/register",
         element: <Register />,
-      },{
-         path: "/*",
+      },
+      {
+        path: "/*",
         element: <NotFount />,
       },
-
     ],
-
   },
 ]);
-
 
 export default router;

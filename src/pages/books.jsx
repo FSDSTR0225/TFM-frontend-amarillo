@@ -147,8 +147,10 @@ function Books() {
   const recalcFiltered = async (baseBooks) => {
   const likes = await getLikes(token, id);
   if (likes.length >= 3) {
+    console.log("Aplicando filtro de preferencias");
     return await filtro(baseBooks);
   } else {
+    console.log("No se aplican filtros de preferencias",baseBooks);
     return baseBooks;
   }
 };
