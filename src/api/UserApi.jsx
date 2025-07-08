@@ -1,4 +1,6 @@
+
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 export const registerUser = async (data) => {
   const res = await fetch(`${backendUrl}/users/register`, {
@@ -16,9 +18,32 @@ export const loginUser = async (data) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-
   return res.json();
 };
+
+export const updateUser = async (formData) => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`http://localhost:3000/users/profile`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || "Error al actualizar el perfil");
+  }
+
+  const data = await res.json();
+  console.log("Usuario actualizado:", data);
+
+  return data.user;
+};
+
+
 
 export const getUserId = async (token, id) => {
   const res = await fetch(`${backendUrl}/users/${id}`, {
@@ -26,11 +51,46 @@ export const getUserId = async (token, id) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + token,
+
     },
   });
 
   return res.json();
 };
+
+
+
+export const getPreferences = async (token, id) => {
+  const res = await fetch(`http://localhost:3000/users/preferences/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+  });
+  return res.json();
+};
+
+export const postPreferences = async (token, id, data) => {
+  const res = await fetch(`http://localhost:3000/users/preferences/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+    body: JSON.stringify({ voteType: data }),
+  });
+  return res.json();
+};
+
+export const getLikes = async (token, id) => {
+  const res = await fetch(`http://localhost:3000/users/like/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+    
 
 export const updateUser = async (formData) => {
   const token = localStorage.getItem("token");
