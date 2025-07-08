@@ -17,6 +17,28 @@ export const loginUser = async (data) => {
   return res.json();
 };
 
+export const updateUser = async (formData) => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`http://localhost:3000/users/profile`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || "Error al actualizar el perfil");
+  }
+
+  const data = await res.json();
+  console.log("Usuario actualizado:", data);
+
+  return data.user;
+};
+
 export const getUserId = async (token, id) => {
   const res = await fetch(`http://localhost:3000/users/${id}`, {
     method: "GET",

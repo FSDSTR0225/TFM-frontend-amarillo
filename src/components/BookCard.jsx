@@ -2,8 +2,8 @@
 
 import { useNavigate } from "react-router-dom";
 import "../styles/BookCard.css";
-import { useState } from "react";
-import { getVoteBooks } from "../api/BookApi";
+import { useEffect, useState } from "react";
+import { getVoteBooks, voteBooks } from "../api/BookApi";
 import { postPreferences } from "../api/UserApi";
 
 function BookCard({ book }) {
@@ -17,9 +17,27 @@ function BookCard({ book }) {
 
   const [likeCount, setLikeCount] = useState(book.like || 0);
   const [dislikeCount, setDislikeCount] = useState(book.dislike || 0);
+  console.log("name del libro:", book.name);
   console.log("contador dislike", book.dislike);
   console.log("contador like", book.like);
   const token = localStorage.getItem("token");
+
+   useEffect(() => {
+    const handleVote = async () => {
+      try{
+      const res = await voteBooks(token, book._id );
+      if (!res) {
+        throw new Error(res.message || `Error al obtener los votos`);  
+      }
+      setLikeCount(res.like );
+      setDislikeCount(res.dislike );
+
+      }catch (error) {
+        console.error("Error al manejar el voto:", error);
+      }
+    }
+    handleVote();
+   }, []);
 
   const handleVote = async (voteType) => {
     try {
