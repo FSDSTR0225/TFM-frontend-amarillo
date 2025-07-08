@@ -80,6 +80,7 @@ export async function getGenres(token) {
   return response.json();
 }
 
+
 export async function getAuthors(token) {
   const response = await fetch(`${backendUrl}/books/authors`, {
     headers: {

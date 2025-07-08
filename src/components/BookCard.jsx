@@ -1,18 +1,18 @@
 // src/components/BookCard.jsx
 
 import { useNavigate } from "react-router-dom";
-import "../styles/BookCard.css";
+
 import { useEffect, useState } from "react";
 import { getVoteBooks, voteBooks } from "../api/BookApi";
 import { postPreferences } from "../api/UserApi";
+import { ThumbsUp, ThumbsDown, Bookmark, BookOpen } from "lucide-react";
+
 
 function BookCard({ book }) {
-
   const navigate = useNavigate();
 
   function handlePerfil() {
     navigate(`/books/PerfilBook`, { state: { book: book } });
-    
   }
 
   const [likeCount, setLikeCount] = useState(book.like || 0);
@@ -60,50 +60,50 @@ function BookCard({ book }) {
      console.log("preferncia enviada", res);
   }
 
-
   return (
-    <div className="book-card">
-      
-      <img src={book.imgBook} alt={book.name} className="book-img" />
-      <h2 className="book-title">{book.name}</h2>
-      <p className="book-author">
-        <strong>Autor:</strong> {book.author}
-      </p>
-      <p className="book-genre">
-        <strong>Género:</strong> {book.genre}
-      </p>
-      <p className="book-language">
-        <strong>Idioma:</strong> {book.language}
-      </p>
-      <p className="book-synopsis">
-        <strong>Sinopsis:</strong> {book.synopsis}
-      </p>
+    <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+      {/* Imagen del libro */}
+      <div className="md:w-1/3 w-full">
+        <img src={book.imgBook} alt={book.name} className="object-cover w-full h-full md:h-auto" />
+      </div>
+      {/* Contenido */}
+      <div className="md:w-2/3 w-full p-6 flex flex-col justify-between">
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold text-gray-800">{book.name}</h2>
+          <p className="text-gray-700">
+            <strong>Autor:</strong> {book.author}
+          </p>
+          <p className="text-gray-700">
+            <strong>Género:</strong> {book.genre}
+          </p>
+          <p className="text-gray-700">
+            <strong>Idioma:</strong> {book.language}
+          </p>
+          <p className="text-gray-600 text-sm mt-2">
+            <strong>Sinopsis:</strong> {book.synopsis}
+          </p>
+        </div>
 
-      <div className="book-card-actions">
-        <button
-          className="action-btn"
-          onClick={() => {
-            handleVote("like");
-            preferences("like");
-          }}
-        >
-          👍 Me gusta ({likeCount})
-        </button>
-        <button
-          className="action-btn"
-          onClick={() => {
-            handleVote("dislike");
-             preferences("dislike");
-          }}
-        >
-          👎 No me gusta ({dislikeCount})
-        </button>
+        {/* Botones */}
+        <div className="flex flex-wrap gap-2 mt-4">
+          <button onClick={() => handleVote("like")} className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 text-sm font-medium rounded-lg hover:bg-green-200 transition">
+            <ThumbsUp size={16} /> ({likeCount})
+          </button>
 
-        <button className="action-btn">💾 Guardar</button>
-        <button className="action-btn" onClick={handlePerfil}>📖 Saber más</button>
+          <button onClick={() => handleVote("dislike")} className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-800 text-sm font-medium rounded-lg hover:bg-red-200 transition">
+            <ThumbsDown size={16} /> ({dislikeCount})
+          </button>
+
+          <button className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg hover:bg-blue-200 transition">
+            <Bookmark size={16} />
+          </button>
+
+          <button onClick={handlePerfil} className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-800 text-sm font-medium rounded-lg hover:bg-indigo-200 transition">
+            <BookOpen size={16} /> Saber más
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-
 export default BookCard;
