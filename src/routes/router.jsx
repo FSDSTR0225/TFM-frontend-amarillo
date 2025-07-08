@@ -56,10 +56,6 @@ const router = createBrowserRouter([
         element: <LookFriends />,
       },
       {
-        path: "/LookFriends/chat/:roomId",
-        element: <Chat />,
-      },
-      {
         path: "/*",
         element: <NotFount />,
       },

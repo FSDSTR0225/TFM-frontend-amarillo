@@ -6,7 +6,6 @@ import BookCard from "../components/BookCard";
 import FiltersPanel from "../components/FiltersPanel";
 import { getBooks, getGenres, getAuthors, getLanguages } from "../api/BookApi";
 import { useLogin } from "../context/contextLogin";
-import "../styles/Books.css";
 import { getLikes, getPreferences } from "../api/UserApi";
 
 function Books() {
@@ -31,6 +30,27 @@ function Books() {
   const { idBook } = location.state || {};
 
 
+
+  useEffect(() => {
+
+    const booksAll = async () => {
+      try {
+        // mado el token al api
+        const response = await getBooks(token);
+        setBooks(response);
+// Si venimos desde la vista de detalle con un idBook, 
+         if (idBook) {
+          const idx = response.findIndex(b => b._id === idBook);
+          if (idx >= 0) setCurrentIndex(idx);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchBooks({});
+    setFiltersApplied(false);
+    booksAll();
+  }, []);
 
 
   const filtro = async (response) => {
@@ -108,15 +128,7 @@ function Books() {
     [token, idBook]
   );
 
-  /* --- Primera carga --- */
-  useEffect(() => {
-    fetchBooks({});
-    setFiltersApplied(false);
-   
-  }, []);
 
-
-   
 
 
   /* --- Aplicar filtros --- */
@@ -145,9 +157,11 @@ function Books() {
     );
   };
 
-
+// Recalcula los libros filtrados según las preferencias del usuario
+// Si el usuario tiene al menos 3 libros "gustados", aplica el filtro de preferencias
   const recalcFiltered = async (baseBooks) => {
   const likes = await getLikes(token, id);
+  console.log("Likes:", likes);
   if (likes.length >= 3) {
     console.log("Aplicando filtro de preferencias");
     return await filtro(baseBooks);
@@ -167,6 +181,7 @@ const handleNext = async () => {
   }
 };
 
+// Navegación hacia el libro anterior
 const handlePrev = async () => {
   const base = await getBooks(token, filters);
   const newBooks = await recalcFiltered(base);
@@ -196,8 +211,8 @@ const handlePrev = async () => {
       </section>
 
       <section className="w-full max-w-3xl flex flex-col items-center">
-        {books.length === 0 && filtersCurrentlyApplied && <p className="text-center text-gray-500">No hay resultados para estos criterios de búsqueda.</p>}
-        {books.length === 0 && !filtersCurrentlyApplied && <p className="text-center text-gray-500">No se encontró ningún libro recomendado en nuestra base de datos.</p>}
+        {books.length === 0 && filtersApplied && <p className="text-center text-gray-500">No hay resultados para estos criterios de búsqueda.</p>}
+        {books.length === 0 && !filtersApplied && <p className="text-center text-gray-500">No se encontró ningún libro recomendado en nuestra base de datos.</p>}
 
         {books[currentIndex] && (
           <>
@@ -209,17 +224,19 @@ const handlePrev = async () => {
             />
             </div>
 
-           /* {currentIndex < books.length - 1 && (
+           {/*  {currentIndex < books.length - 1 && (
               <button className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded shadow-lg transition" onClick={handleNext}>
                 Siguiente
               </button>
-            )}*/
-               <button className="prev-btn" onClick={handlePrev}>
-              Anterior
+            )}*/}
+            
+
+            <button className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded shadow-lg transition" onClick={handleNext}>
+              Siguiente
             </button>
 
-            <button className="next-btn" onClick={handleNext}>
-              Siguiente
+               <button className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded shadow-lg transition"  onClick={handlePrev}>
+              Anterior
             </button>
 
           </>

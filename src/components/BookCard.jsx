@@ -23,6 +23,7 @@ function BookCard({ book }) {
   const token = localStorage.getItem("token");
 
    useEffect(() => {
+    // Función para manejar el voto al cargar el componente
     const handleVote = async () => {
       try{
       const res = await voteBooks(token, book._id );
@@ -86,11 +87,14 @@ function BookCard({ book }) {
 
         {/* Botones */}
         <div className="flex flex-wrap gap-2 mt-4">
-          <button onClick={() => handleVote("like")} className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 text-sm font-medium rounded-lg hover:bg-green-200 transition">
+          <button onClick={() =>{ handleVote("like");  preferences("like");}} className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 text-sm font-medium rounded-lg hover:bg-green-200 transition">
             <ThumbsUp size={16} /> ({likeCount})
           </button>
 
-          <button onClick={() => handleVote("dislike")} className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-800 text-sm font-medium rounded-lg hover:bg-red-200 transition">
+          <button onClick={() => {
+            handleVote("dislike");
+             preferences("dislike");
+          }} className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-800 text-sm font-medium rounded-lg hover:bg-red-200 transition">
             <ThumbsDown size={16} /> ({dislikeCount})
           </button>
 
