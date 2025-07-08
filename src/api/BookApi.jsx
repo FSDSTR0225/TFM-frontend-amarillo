@@ -1,3 +1,5 @@
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const getBooks = async (token, filters = {}) => {
   // filters es opcional y por defecto un objeto vacío
   // Construir la URL con los parámetros de consulta
@@ -10,77 +12,56 @@ export const getBooks = async (token, filters = {}) => {
   }
   // Para género (que es un array en el backend y en el frontend cuando se selecciona múltiple)
   if (filters.genre && filters.genre.length > 0) {
-    filters.genre.forEach((g) => queryParams.append("genre", g));
+    queryParams.append("genre", filters.genre.join(",")); // Unir el array con comas
   }
-
   // Para idioma (que es una cadena simple)
   if (filters.language) {
     queryParams.append("language", filters.language);
   }
   // Para autor (que es un array en el backend y en el frontend cuando se selecciona múltiple)
   if (filters.author && filters.author.length > 0) {
-    filters.author.forEach((a) => queryParams.append("author", a));
+    queryParams.append("author", filters.author.join(",")); // Unir el array con comas
   }
 
   // Si hay parámetros en queryParams, añádelos a la URL base con '?', de lo contrario, usa solo la URL base
-  const url = `http://localhost:3000/books${
-    queryParams.toString() ? `?${queryParams.toString()}` : ""
-  }`;
-
+  const url = `${backendUrl}/books${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+//* faltaria una books/ en la url para que funcione y creo que seria mejor ponerlo en otra funcion 
   const res = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + token,
-    },
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
   return res.json();
 };
 
 export const Bookdata = async (token, id) => {
-  const res = await fetch(`http://localhost:3000/books/${id}`, {
+  const res = await fetch(`${backendUrl}/books/${id}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + token,
-    },
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
   return res.json();
 };
 
 export const rewiusBook = async (data, token, id) => {
-  const res = await fetch(`http://localhost:3000/books/review/${id}`, {
+  const res = await fetch(`${backendUrl}/books/review/${id}`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + token,
-    },
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
     body: JSON.stringify(data),
   });
   return res.json();
 };
 
 export const deleteRewius = async (data, token, id) => {
-  const res = await fetch(
-    `http://localhost:3000/books/review/${id}?reviewId=${data}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: "Bearer " + token,
-      },
-    }
-  );
+  const res = await fetch(`${backendUrl}/books/review/${id}?reviewId=${data}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+  });
   return res.json();
 };
 
 export const getVoteBooks = async (token, bookId, voteType) => {
-  const res = await fetch(`http://localhost:3000/books/${bookId}/vote`, {
+  const res = await fetch(`${backendUrl}/books/${bookId}/vote`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + token,
-    },
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
 
     body: JSON.stringify({ vote: voteType }),
   });
@@ -89,7 +70,7 @@ export const getVoteBooks = async (token, bookId, voteType) => {
 };
 //peticiones para obtener géneros y autores
 export async function getGenres(token) {
-  const response = await fetch("http://localhost:3000/books/genres", {
+  const response = await fetch(`${backendUrl}/books/genres`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -100,7 +81,7 @@ export async function getGenres(token) {
 }
 
 export async function getAuthors(token) {
-  const response = await fetch("http://localhost:3000/books/authors", {
+  const response = await fetch(`${backendUrl}/books/authors`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -112,7 +93,7 @@ export async function getAuthors(token) {
 
 //Función Para obtener idiomas únicos
 export async function getLanguages(token) {
-  const response = await fetch("http://localhost:3000/books/languages", {
+const response = await fetch(`${backendUrl}/books/languages`, {
     // <-- Nueva ruta en el backend
     headers: {
       "Content-Type": "application/json",
@@ -124,7 +105,7 @@ export async function getLanguages(token) {
 }
 
 export const voteBooks = async (token, bookId, ) => {
-  const res = await fetch(`http://localhost:3000/books/vote/${bookId}`, {
+  const res = await fetch(`${backendUrl}/books/vote/${bookId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
