@@ -86,7 +86,7 @@ function Register() {
       localStorage.setItem("user", JSON.stringify(formData));
       setSubmitted(true);
 
-      navigate("/profile");
+      navigate("/login");
     } catch (error) {
       console.error("Error en el registro:", error);
     }

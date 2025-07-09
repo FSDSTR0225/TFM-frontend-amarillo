@@ -8,7 +8,11 @@ import InputField from "../components/Input";
 import { validateEmail, validatePassword } from "../components/ValidateInput";
 
 const AdvancedForm = () => {
-  const { register, handleSubmit , formState: { errors }, } = useForm({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({});
   // conexion con el contexto
   const { addLogin } = useLogin();
   const { login } = useUser();
@@ -37,8 +41,8 @@ const AdvancedForm = () => {
       login({ ...result.user, _id: result.user._id || result.user.id }, result.access_token);
       localStorage.setItem("token", result.access_token); // 🔐 Guarda el token para futuras peticiones
 
-      // se va a la pagina principal
-      navigate("/");
+      // se va a la pagina de libros directamente
+      navigate("/books");
     } catch (error) {
       console.error("Error al hacer login:", error.message);
     }
@@ -51,17 +55,22 @@ const AdvancedForm = () => {
       <form onSubmit={handleSubmit(onSubmitHandler)} className="flex flex-col bg-[#f4f6ff] p-[30px] rounded-2xl shadow-md w-full max-w-md">
         <label className="font-serif font-semibold mb-1 text-[#280f91]">Email:</label>
 
-        <InputField type="email" required={true}  name="email" placeholder="Email" className="p-2 border border-[#ccc] rounded mb-3 font-serif" register={register} validationRules={validateEmail} errors={errors} />
-      
+        <InputField type="email" required={true} name="email" placeholder="Email" className="p-2 border border-[#ccc] rounded mb-3 font-serif" register={register} validationRules={validateEmail} errors={errors} />
 
         <label className="font-serif font-semibold mb-1 text-[#280f91]">Password:</label>
-        
-        <InputField  type="password"  name="password" required={true} placeholder="Contraseña" className="p-2 border border-[#ccc] rounded mb-3 font-serif" register={register} validationRules={validatePassword} errors={errors}  />
-        
+
+        <InputField type="password" name="password" required={true} placeholder="Contraseña" className="p-2 border border-[#ccc] rounded mb-3 font-serif" register={register} validationRules={validatePassword} errors={errors} />
+
         <button type="submit" className="bg-[#dce1f9] hover:bg-[#280f91] hover:text-[#dce1f9] text-[#280f91] font-bold font-serif rounded-full p-[10px] mt-4">
           Enviar
         </button>
       </form>
+      <p className="text-[#280f91] font-serif mt-4">
+        ¿No tienes cuenta?{" "}
+        <span className="font-semibold cursor-pointer hover:underline" onClick={() => navigate("/register")}>
+          Regístrate aquí
+        </span>
+      </p>
     </div>
   );
 };
