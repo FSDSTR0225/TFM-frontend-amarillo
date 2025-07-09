@@ -80,6 +80,7 @@ export async function getGenres(token) {
   return response.json();
 }
 
+
 export async function getAuthors(token) {
   const response = await fetch(`${backendUrl}/books/authors`, {
     headers: {
@@ -103,3 +104,20 @@ const response = await fetch(`${backendUrl}/books/languages`, {
   if (!response.ok) throw new Error("Error al obtener idiomas");
   return response.json();
 }
+
+export const voteBooks = async (token, bookId, ) => {
+  const res = await fetch(`${backendUrl}/books/vote/${bookId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Error al enviar el voto");
+  }
+  return res.json();
+}
+
+

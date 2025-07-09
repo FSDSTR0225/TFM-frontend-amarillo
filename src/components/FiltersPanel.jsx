@@ -39,10 +39,10 @@ function FiltersPanel({ filters, setFilters, genres, authors, languages }) {
           ))}
         </select>
       </label>
-
       <label className="flex flex-col text-gray-700 font-medium font-serif">
         Idioma:
         <select name="language" value={filters.language} onChange={handleChange} className="mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white cursor-pointer">
+
           {languages.map((l, i) => (
             <option key={i} value={l}>
               {l === "" ? "Todos" : l}
@@ -55,6 +55,7 @@ function FiltersPanel({ filters, setFilters, genres, authors, languages }) {
         Autor:
         <select name="author" value={filters.author} onChange={handleChange} multiple className="mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white cursor-pointer" size={authors.length > 5 ? 5 : authors.length + 1}>
           <option value="">Todos los autores</option>
+
           {authors.map((a, i) => (
             <option key={i} value={a}>
               {a}
@@ -65,5 +66,6 @@ function FiltersPanel({ filters, setFilters, genres, authors, languages }) {
     </div>
   );
 }
+
 
 export default FiltersPanel;

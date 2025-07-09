@@ -11,6 +11,7 @@ import Register from "../pages/register";
 import NotFount from "../pages/notFount";
 import LookFriends from "../pages/lookFriends";
 
+
 const router = createBrowserRouter([
   {
     // Ruta principal que pillara la estrutura de root.jsx
@@ -49,13 +50,10 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
+
         path: "/LookFriends",
         // element: <LookFriends/>,
         element: <LookFriends />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
       },
       {
         path: "/*",

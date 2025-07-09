@@ -1,5 +1,7 @@
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const validateToken = async (token) => {
-    const res = await fetch("http://localhost:3000/token/validate", {
+    const res = await fetch(`${backendUrl}/token/validate`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${token}`
