@@ -122,7 +122,7 @@ function PerfilBook() {
             <p>
               <strong>Valoración:</strong> {promedio(dataBook)}
             </p>
-            <a href={amazonUrl} target="_blank" rel="noopener noreferrer" className="bg-[#dce1f9] hover:bg-[#280f91] hover:text-[#dce1f9] text-[#280f91] font-bold font-serif rounded-full p-[10px] mt-4">
+            <a href={amazonUrl} target="_blank" rel="noopener noreferrer" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-full shadow transition disabled:opacity-50 font-serif mx-auto block">
               Comprar Ahora
             </a>
           </div>
@@ -169,7 +169,7 @@ function PerfilBook() {
               <InputField type="textarea" required={true} name="text" placeholder="Escribe tu opinión aqui..." register={register} validationRules={validateReview} className="w-full border border-gray-300 rounded px-3 py-2 h-28 resize-none" errors={errors} />
             </div>
 
-            <button type="submit" className="flex items-center justify-centergap-2 px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg hover:bg-blue-200 transition">
+            <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-full shadow transition disabled:opacity-50 font-serif mx-auto block">
               Enviar Opinión
             </button>
           </form>

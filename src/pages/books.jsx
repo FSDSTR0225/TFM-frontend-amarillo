@@ -30,7 +30,6 @@ function Books() {
   const { idBook } = location.state || {};
 
 
-
   useEffect(() => {
 
     const booksAll = async () => {
@@ -199,20 +198,22 @@ const handlePrev = async () => {
 
   return (
 
-    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center font-serif">
+
       <h1 className="text-4xl font-serif font-bold text-indigo-800 mb-8">¿Qué te apetece leer?</h1>
 
-      <section className="w-full max-w-5xl bg-white shadow-md rounded-lg p-6 mb-8">
+      <section className="w-full max-w-5xl bg-white shadow-md rounded-lg p-6 mb-8 font-serif">
         <FiltersPanel filters={filters} setFilters={setFilters} genres={genres} authors={authors} languages={languages} />
 
-        <button className="bg-[#dce1f9] hover:bg-[#280f91] hover:text-[#dce1f9] text-[#280f91] font-bold font-serif rounded-full p-[10px] mt-4" onClick={handleClearFilters}>
+        <button className="bg-[#dce1f9] hover:bg-[#280f91] hover:text-[#dce1f9] text-[#280f91] font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block" onClick={handleClearFilters}>
           Limpiar Filtros
         </button>
       </section>
 
       <section className="w-full max-w-3xl flex flex-col items-center">
-        {books.length === 0 && filtersApplied && <p className="text-center text-gray-500">No hay resultados para estos criterios de búsqueda.</p>}
-        {books.length === 0 && !filtersApplied && <p className="text-center text-gray-500">No se encontró ningún libro recomendado en nuestra base de datos.</p>}
+
+        {books.length === 0 && filtersApplied && <p className="text-center text-gray-500 font-serif">No hay resultados para estos criterios de búsqueda.</p>}
+        {books.length === 0 && !filtersApplied && <p className="text-center text-gray-500 font-serif">No se encontró ningún libro recomendado en nuestra base de datos.</p>}
 
         {books[currentIndex] && (
           <>
@@ -224,18 +225,13 @@ const handlePrev = async () => {
             />
             </div>
 
-           {/*  {currentIndex < books.length - 1 && (
-              <button className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded shadow-lg transition" onClick={handleNext}>
-                Siguiente
-              </button>
-            )}*/}
             
 
-            <button className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded shadow-lg transition" onClick={handleNext}>
+            <button className="bg-[#280f91] hover:bg-[#dce1f9] hover:text-[#280f91] text-[#dce1f9] font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block" onClick={handleNext}>
               Siguiente
             </button>
 
-               <button className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded shadow-lg transition"  onClick={handlePrev}>
+               <button className="bg-[#280f91] hover:bg-[#dce1f9] hover:text-[#280f91] text-[#dce1f9] font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block"  onClick={handlePrev}>
               Anterior
             </button>
 

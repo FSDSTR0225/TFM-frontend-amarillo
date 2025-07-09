@@ -28,9 +28,7 @@ function LookFriends() {
       console.error("Error al obtener los datos del usuario:", error.message);
     }
   };
-  const filteredUsers = userData.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = userData.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
   useEffect(() => {
     fetchUserData();
     socketRef.current = io("http://localhost:3000", {
@@ -57,61 +55,33 @@ function LookFriends() {
     // Escuchar la respuesta del servidor con la ID de la sala
     socketRef.current.on("room joined", ({ roomId }) => {
       // navigate(`/LookFriends/chat/${roomId}`);
-     
-        setroomID(roomId);
-        setShowChat(true);
-        setuserFriends( friend );
-      
+
+      setroomID(roomId);
+      setShowChat(true);
+      setuserFriends(friend);
     });
   }
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-4 ">Look Friends</h1>
-      <input
-        type="text"
-        className=" px-4 py-3 border border-gray-300 rounded-full  focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-
-        placeholder="Buscar por nombre..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <section class="h-screen flex overflow-hidden">
-        <div class="bg-white w-2/12">
-          <h2>CHAT LIST</h2>
-          <div name="chatList" class=" flex flex-col gap-2 overflow-auto">
+      <section className="h-[80vh] flex overflow-hidden rounded-xl shadow-lg mx-6 mb-6 font-serif">
+        <div className="w-3/12 bg-[#dce1f9] p-6 m-2 flex flex-col rounded-lg">
+          <h2 className="text-lg font-semibold mb-4 text-[#280f91] border-b border-[#280f91]/30 pb-3 font-serif">CONVERSACIONES CON TUS AMIGOS</h2>
+          <input type="text" className="w-full px-5 py-3 mb-6 rounded-full border-2 border-[#dce1f9] bg-[#dce1f9] text-[#280f91] placeholder-[#280f91]/60 font-serif focus:outline-none focus:ring-4 focus:ring-[#280f91]/40 transition" placeholder="Buscar por nombre..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <div name="chatList" className="flex flex-col gap-4 overflow-auto scrollbar-thin scrollbar-thumb-[#280f91]/60 scrollbar-track-[#dce1f9]">
             {filteredUsers.map((user) => (
-              <div
-                name="chatItem"
-                className="flex  items-start gap-4  cursor-pointer hover:bg-gray-200 p-2"
-                onClick={() => roomNavegation(id, user)}
-              >
-                <img
-                  src={user.profilePicture || "https://via.placeholder.com/150"}
-                  alt={user.name}
-                  className="rounded-full w-12 h-12 object-cover flex-shrink-0"
-                />
+              <div key={user._id} name="chatItem" className="flex items-center gap-4 cursor-pointer p-4 rounded-lg hover:bg-[#280f91]/10 transition" onClick={() => roomNavegation(id, user)}>
+                <img src={user.profilePicture || "https://via.placeholder.com/150"} alt={user.name} className="rounded-full w-14 h-14 object-cover flex-shrink-0 border-2 border-[#280f91]" />
                 <div className="flex flex-col">
-                  <span className="font-bold">{user.name}</span>
-                  <small>
-                    {onlineUsers.includes(user._id)
-                      ? "🟢 En línea"
-                      : "⚪️ Offline"}
-                  </small>
+                  <span className="font-semibold text-[#280f91] font-serif">{user.name}</span>
+                  <small className={`text-sm ${onlineUsers.includes(user._id) ? "text-green-500" : "text-gray-400"}`}>{onlineUsers.includes(user._id) ? "🟢 En línea" : "⚪️ Desconectado"}</small>
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <div class="bg-gray-100 w-8/10">
-          {showChat ? (
-            <Chat userFriends={userFriends} oline={onlineUsers} socket={socketRef} roomId={roomID} />
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-gray-500">Selecciona un chat para comenzar</p>
-            </div>
-          )}
-        </div>
+
+        <div className="w-9/12 bg-[#280f91]/10 text-[#280f91] p-8 m-2 flex flex-col rounded-lg overflow-hidden font-serif">{showChat ? <Chat userFriends={userFriends} oline={onlineUsers} socket={socketRef} roomId={roomID} /> : <div className="flex items-center justify-center h-full text-[#280f91]/70 text-lg italic font-serif">Selecciona un chat para comenzar</div>}</div>
       </section>
     </>
   );

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { io } from "socket.io-client";
 import { useLogin } from "../context/contextLogin";
 import InputField from "./Input";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getBooks } from "../api/BookApi";
 import { useUser } from "../context/UserContext";
 
@@ -82,9 +82,7 @@ function Chat({ userFriends, oline, socket, roomId }) {
       roomId: roomId,
     });
 
-    setMessages((prevMessages) =>
-      prevMessages.filter((msg) => msg._id !== idmsg)
-    );
+    setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== idmsg));
   }
   function messagePerfil(book) {
     socketRef.current.emit("chat message", {
@@ -106,81 +104,43 @@ function Chat({ userFriends, oline, socket, roomId }) {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-blue-50 font-serif">
       {/* Header */}
-      <div className="bg-white shadow-lg border-b  border-gray-200 px-6 py-4">
+      <div className="bg-white shadow-lg border-b border-gray-200 px-6 py-4">
         <div className="flex items-center space-x-4">
           <div className="relative">
             <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
-              <span className="text-white font-semibold text-lg">
-                <img
-                  src={userFriends.profilePicture}
-                  className="rounded-full w-10 h-10 object-cover"
-                />
-              </span>
+              <img src={userFriends.profilePicture} className="rounded-full w-10 h-10 object-cover" alt={userFriends.name} />
             </div>
           </div>
           <div>
-            <p className="font-semibold text-gray-800 text-lg">
-              {userFriends.name}
-            </p>
-            <small>
-              {oline.includes(userFriends._id) ? "🟢 En línea" : "⚪️ Offline" }
-             
-            </small>
+            <p className="font-semibold text-gray-800 text-lg">{userFriends.name}</p>
+            <small>{oline.includes(userFriends._id) ? "🟢 En línea" : "⚪️ Desconectado"}</small>
           </div>
         </div>
       </div>
 
       {/* Chat Messages */}
-      <div className="py-8 px-20 h-[500px] overflow-y-auto flex flex-col gap-6">
+      <div className="flex-1 py-6 px-8 overflow-y-auto flex flex-col gap-6">
         {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex ${
-              msg.userID === id ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`px-4 py-3 rounded-2xl shadow-sm max-w-xs sm:max-w-md md:max-w-lg ${
-                msg.userID === id
-                  ? "bg-blue-500 text-white rounded-br-md"
-                  : "bg-white text-gray-800 rounded-bl-md border border-gray-200"
-              }`}
-            >
-              <img
-               className="rounded-full w-10 h-10 object-cover"
-                src={
-                  msg.userID === id
-                    ? user.profilePicture
-                    : userFriends.profilePicture
-                }
-              />
+          <div key={index} className={`flex ${msg.userID === id ? "justify-end" : "justify-start"}`}>
+            <div className={`px-4 py-3 rounded-2xl shadow-sm max-w-xs sm:max-w-md md:max-w-lg ${msg.userID === id ? "bg-blue-500 text-white rounded-br-md" : "bg-white text-gray-800 rounded-bl-md border border-gray-200"}`}>
+              <img className="rounded-full w-10 h-10 object-cover mb-2" src={msg.userID === id ? user.profilePicture : userFriends.profilePicture} alt="avatar" />
               <span className="message-text block mb-2">{msg.text}</span>
 
               {msg.bookID && (
-                <button
-                  className={`p-2 text-sm ${
-                    msg.userID === id
-                      ? "hover:text-white hover:bg-blue-600"
-                      : "hover:text-gray-800 hover:bg-gray-200"
-                  } rounded-full`}
-                  onClick={() => handlePerfil(msg.bookID)}
-                >
+                <button className={`p-2 text-sm rounded-full ${msg.userID === id ? "hover:text-white hover:bg-blue-600" : "hover:text-gray-800 hover:bg-gray-200"}`} onClick={() => handlePerfil(msg.bookID)}>
                   Perfil del libro 📚
                 </button>
               )}
 
               {msg.userID === id && (
-                <button
-                  className="mt-2 block border-red-500 bg-red-500 rounded-full hover:text-white hover:bg-red-700 w-5 h-5 text-center"
-                  onClick={() => eliminar(msg._id)}
-                >
+                <button className="mt-2 block border-red-500 bg-red-500 rounded-full hover:text-white hover:bg-red-700 w-5 h-5 text-center" onClick={() => eliminar(msg._id)} aria-label="Eliminar">
                   X
                 </button>
               )}
 
-              <span className="text-xs font-medium text-black-500 block mt-1">
+              <span className="text-xs font-medium text-gray-500 block mt-1">
                 {new Date(msg.createdAt).toLocaleString("es-ES", {
                   day: "2-digit",
                   month: "2-digit",
@@ -196,37 +156,26 @@ function Chat({ userFriends, oline, socket, roomId }) {
       </div>
 
       {/* Input Form */}
-      <div className="bg-white  border-t border-gray-200 ">
-        <form
-          onSubmit={handleSubmit(onSubmitHandler)}
-          className="flex items-center space-x-3"
-        >
+      <div className="bg-white border-t border-gray-200 px-6 py-4 relative z-50">
+        <form onSubmit={handleSubmit(onSubmitHandler)} className="flex items-center space-x-3 relative">
           <div className="flex-1">
-            <InputField
-              type="text"
-              name="message"
-              register={register}
-              placeholder="Type a message..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+            <InputField type="text" name="message" register={register} placeholder="Escribe tu mensaje..." className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
           </div>
-          <div className="relative inline-block text-left">
-            <button
-              onClick={() => setShowBooks(!showBooks)}
-              className="flex items-center justify-center w-10 h-10 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+
+          <div className="relative z-50">
+            <button type="button" onClick={() => setShowBooks(!showBooks)} className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-xl" aria-label="Mostrar libros">
               📚
             </button>
 
             {showBooks && (
-              <div
-                className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-10
-                    max-h-64 overflow-y-auto overscroll-contain"
-              >
+              <div className="absolute bottom-14 right-0 w-64 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
                 {books.map((book) => (
                   <div
                     key={book._id}
-                    onClick={() => messagePerfil(book)}
+                    onClick={() => {
+                      messagePerfil(book);
+                      setShowBooks(false);
+                    }}
                     className="cursor-pointer p-3 hover:bg-gray-100 border-b last:border-b-0"
                   >
                     <h3 className="font-medium text-gray-800">{book.name}</h3>
@@ -237,11 +186,8 @@ function Chat({ userFriends, oline, socket, roomId }) {
             )}
           </div>
 
-          <button
-            type="submit"
-            className=" bg-blue-500 hover:bg-blue-600 text-white rounded-full  shadow-md hover:shadow-lg"
-          >
-            Send
+          <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition">
+            Enviar
           </button>
         </form>
       </div>
