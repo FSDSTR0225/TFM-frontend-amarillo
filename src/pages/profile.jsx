@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { getUserId, updateUser } from "../api/UserApi";
+import {  updateUser } from "../api/UserApi";
 import { useUser } from "../context/UserContext";
 import { Camera, Lock, Unlock } from "lucide-react";
 
@@ -59,7 +59,7 @@ const Profile = () => {
         formData.append("newPassword", data.newPassword);
       }
 
-      const token = localStorage.getItem("token");
+    
       const updatedUser = await updateUser(formData);
       setSuccessMessage("Perfil actualizado con éxito.");
       setErrorMessage("");
