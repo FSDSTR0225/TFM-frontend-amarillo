@@ -73,8 +73,8 @@ export const getLikes = async (token, id) => {
 };
     
 
-export const updateUser = async (formData) => {
-  const token = localStorage.getItem("token");
+export const updateUser = async (token ,formData) => {
+ 
 
   const res = await fetch(`${backendUrl}/users/profile`, {
     method: "PUT",
@@ -98,6 +98,15 @@ export const updateUser = async (formData) => {
 export const getUser = async (token) => {
   const res = await fetch(`${backendUrl}/users/all`, {
     method: "GET",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+  });
+  return res.json();
+};
+
+
+export const deleteUserApi = async (token,id) => {
+  const res = await fetch(`${backendUrl}/users/delete/${id}`, {
+    method: "DELETE",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
   return res.json();

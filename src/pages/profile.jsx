@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import {  updateUser } from "../api/UserApi";
+import { deleteUserApi, updateUser } from "../api/UserApi";
 import { useUser } from "../context/UserContext";
 import { Camera, Lock, Unlock } from "lucide-react";
+import { useLogin } from "../context/contextLogin";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user, setUser } = useUser();
+  const {token, logout} = useLogin();
   const { register, handleSubmit, watch, setValue } = useForm();
   const [preview, setPreview] = useState(null);
   const [originalData, setOriginalData] = useState(null);
@@ -13,6 +16,7 @@ const Profile = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isChanged, setIsChanged] = useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
+    const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -33,12 +37,18 @@ const Profile = () => {
 
   const onSubmit = async (data) => {
     if (!user || !user._id) {
-      setErrorMessage("Usuario no identificado. Por favor vuelve a iniciar sesión.");
+      setErrorMessage(
+        "Usuario no identificado. Por favor vuelve a iniciar sesión."
+      );
       return;
     }
     try {
       if (showPasswordFields) {
-        if (!data.currentPassword || !data.newPassword || !data.confirmPassword) {
+        if (
+          !data.currentPassword ||
+          !data.newPassword ||
+          !data.confirmPassword
+        ) {
           setErrorMessage("Por favor completa todos los campos de contraseña.");
           return;
         }
@@ -50,7 +60,9 @@ const Profile = () => {
 
       const formData = new FormData();
       formData.append("name", data.name);
+      console.log("photo1", data.photo[0]);
       if (data.photo && data.photo[0]) {
+        console.log("photo2", data.photo[0]);
         formData.append("photo", data.photo[0]);
       }
 
@@ -59,8 +71,7 @@ const Profile = () => {
         formData.append("newPassword", data.newPassword);
       }
 
-    
-      const updatedUser = await updateUser(formData);
+      const updatedUser = await updateUser(token,formData);
       setSuccessMessage("Perfil actualizado con éxito.");
       setErrorMessage("");
       setIsChanged(false);
@@ -90,18 +101,46 @@ const Profile = () => {
     setPreview(URL.createObjectURL(file));
   };
 
+const deleteUser = async () => {
+  try {
+    await deleteUserApi(token, user._id);
+    console.log("Usuario eliminado correctamente");
+   logout();
+    navigate("/");
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    setErrorMessage("Error al eliminar la cuenta.");
+  }
+};
+
+
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 flex justify-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8 space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8 space-y-6"
+      >
         <div className="space-y-2">
-          <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">¿Cuál es tu nombre?</h2>
+          <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">
+            ¿Cuál es tu nombre?
+          </h2>
         </div>
 
-        <input {...register("name", { required: true })} placeholder="Nombre" className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif" />
+        <input
+          {...register("name", { required: true })}
+          placeholder="Nombre"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
+        />
         <div className="space-y-2">
-          <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">¿Quieres cambiar la contraseña?</h2>
+          <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">
+            ¿Quieres cambiar la contraseña?
+          </h2>
         </div>
-        <button type="button" onClick={() => setShowPasswordFields(!showPasswordFields)} className="flex items-center gap-2 bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-full shadow hover:bg-indigo-200 transition">
+        <button
+          type="button"
+          onClick={() => setShowPasswordFields(!showPasswordFields)}
+          className="flex items-center gap-2 bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-full shadow hover:bg-indigo-200 transition"
+        >
           {showPasswordFields ? (
             <>
               <Unlock size={18} /> Cancelar cambio de contraseña
@@ -115,34 +154,90 @@ const Profile = () => {
 
         {showPasswordFields && (
           <div className="space-y-4">
-            <input {...register("currentPassword", { required: true })} type="password" placeholder="Contraseña actual" className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif" />
-            <input {...register("newPassword", { required: true, minLength: 6 })} type="password" placeholder="Nueva contraseña" className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif" />
-            <input {...register("confirmPassword", { required: true, minLength: 6 })} type="password" placeholder="Confirmar nueva contraseña" className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif" />
+            <input
+              {...register("currentPassword", { required: true })}
+              type="password"
+              placeholder="Contraseña actual"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
+            />
+            <input
+              {...register("newPassword", { required: true, minLength: 6 })}
+              type="password"
+              placeholder="Nueva contraseña"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
+            />
+            <input
+              {...register("confirmPassword", { required: true, minLength: 6 })}
+              type="password"
+              placeholder="Confirmar nueva contraseña"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
+            />
           </div>
         )}
 
         <div className="space-y-2">
           <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">
-            ¿Cómo quieres que te vean? <span className="text-indigo-800 font-bold">¡Elige tu mejor foto de perfil!</span>
+            ¿Cómo quieres que te vean?{" "}
+            <span className="text-indigo-800 font-bold">
+              ¡Elige tu mejor foto de perfil!
+            </span>
           </h2>
 
           <label className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-full shadow hover:bg-indigo-200 transition cursor-pointer">
             <Camera size={18} />
             Seleccionar archivo
-            <input type="file" {...register("photo")} onChange={handleImageChange} className="hidden" />
+            <input
+              type="file"
+              {...register("photo")}
+              onChange={(e) => {
+                register("photo").onChange(e); // para que react-hook-form lo registre
+                handleImageChange(e);
+              }}
+              className="hidden"
+            />
           </label>
 
-          {preview && <img src={preview} alt="preview" className="rounded-full object-cover mt-2 shadow-md" style={{ width: "100px", height: "100px" }} />}
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              className="rounded-full object-cover mt-2 shadow-md"
+              style={{ width: "100px", height: "100px" }}
+            />
+          )}
         </div>
 
-        <button type="submit" disabled={!isChanged} className="bg-[#280f91] hover:bg-[#dce1f9] hover:text-[#280f91] text-[#dce1f9] font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block">
+        <button
+          type="submit"
+          disabled={!isChanged}
+          className="bg-[#280f91] hover:bg-[#dce1f9] hover:text-[#280f91] text-[#dce1f9] font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block"
+        >
           Guardar Cambios
         </button>
 
-        {successMessage && <p className="text-green-700 bg-green-100 border border-green-300 p-3 rounded font-serif text-sm">{successMessage}</p>}
+          <button
+           type="button"
+          onClick={deleteUser}
+          className="bg-red-500 hover:bg-gray-200 hover:text-black text-black font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block"
+        >
+          Eliminar cuenta
+        </button>
 
-        {errorMessage && <p className="text-red-700 bg-red-100 border border-red-300 p-3 rounded font-serif text-sm">{errorMessage}</p>}
+        {successMessage && (
+          <p className="text-green-700 bg-green-100 border border-green-300 p-3 rounded font-serif text-sm">
+            {successMessage}
+          </p>
+        )}
+
+        {errorMessage && (
+          <p className="text-red-700 bg-red-100 border border-red-300 p-3 rounded font-serif text-sm">
+            {errorMessage}
+          </p>
+        )}
+        
+       
       </form>
+
     </div>
   );
 };
