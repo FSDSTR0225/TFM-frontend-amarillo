@@ -122,3 +122,27 @@ export async function getLanguages(token) {
   if (!response.ok) throw new Error("Error al obtener idiomas");
   return response.json();
 }
+// Guardar un libro
+export const saveBook = async (token, bookId) => {
+  const res = await fetch(`http://localhost:3000/books/save/${bookId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Error al guardar el libro");
+  return res.json();
+};
+
+// Obtener libros guardados
+export const getSavedBooks = async (token) => {
+  const res = await fetch("http://localhost:3000/books/saved", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Error al obtener libros guardados");
+  return res.json();
+};
