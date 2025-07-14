@@ -3,21 +3,9 @@
 import { useNavigate } from "react-router-dom";
 
 import { useEffect, useState } from "react";
-import {
-  deleteSaveBook,
-  getSavedBooks,
-  getVoteBooks,
-  saveBook,
-  voteBooks,
-} from "../api/BookApi";
+import { deleteSaveBook, getSavedBooks, getVoteBooks, saveBook, voteBooks } from "../api/BookApi";
 import { postPreferences } from "../api/UserApi";
-import {
-  ThumbsUp,
-  ThumbsDown,
-  BookmarkPlus,
-  BookOpen,
-  BookmarkX,
-} from "lucide-react";
+import { ThumbsUp, ThumbsDown, BookmarkPlus, BookOpen, BookmarkX } from "lucide-react";
 
 function BookCard({ book }) {
   const navigate = useNavigate();
@@ -57,9 +45,7 @@ function BookCard({ book }) {
     console.log("Libros guardados:", savedBooks);
     console.log("Libro actual:", book._id);
 
-    const isSaved = savedBooks.some(
-      (id) => id._id.toString() === book._id.toString()
-    );
+    const isSaved = savedBooks.some((id) => id._id.toString() === book._id.toString());
     console.log("ID del libro actual:", isSaved);
     setSaved(isSaved);
   };
@@ -92,7 +78,6 @@ function BookCard({ book }) {
     } catch (err) {
       console.error("Error al votar:", err);
     }
-    
   };
   const handleRemoveSavedBook = async () => {
     try {
@@ -105,29 +90,26 @@ function BookCard({ book }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+    <div className="w-full max-w-sm mx-auto bg-white shadow-md rounded-xl overflow-hidden border border-gray-200 flex flex-col">
       {/* Imagen del libro */}
-      <div className="md:w-1/3 w-full">
-        <img
-          src={book.imgBook}
-          alt={book.name}
-          className="object-cover w-full h-full md:h-auto"
-        />
+      <div className="w-full h-120">
+        <img src={book.imgBook} alt={book.name} className="w-full h-full object-cover" />
       </div>
+
       {/* Contenido */}
-      <div className="md:w-2/3 w-full p-6 flex flex-col justify-between">
+      <div className="p-4 flex flex-col justify-between flex-grow">
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-gray-800">{book.name}</h2>
-          <p className="text-gray-700">
+          <h2 className="text-xl font-bold text-gray-800 line-clamp-2">{book.name}</h2>
+          <p className="text-gray-700 text-sm">
             <strong>Autor:</strong> {book.author}
           </p>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-sm">
             <strong>Género:</strong> {book.genre}
           </p>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-sm">
             <strong>Idioma:</strong> {book.language}
           </p>
-          <p className="text-gray-600 text-sm mt-2">
+          <p className="text-gray-600 text-sm mt-2 line-clamp-3">
             <strong>Sinopsis:</strong> {book.synopsis}
           </p>
         </div>
@@ -155,25 +137,16 @@ function BookCard({ book }) {
           </button>
 
           {saved ? (
-            <button
-              onClick={handleRemoveSavedBook}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg hover:bg-blue-200 transition"
-            >
+            <button onClick={handleRemoveSavedBook} className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg hover:bg-blue-200 transition">
               <BookmarkX size={16} />
             </button>
           ) : (
-            <button
-              onClick={handleSaveBook}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg hover:bg-blue-200 transition"
-            >
+            <button onClick={handleSaveBook} className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg hover:bg-blue-200 transition">
               <BookmarkPlus size={16} />
             </button>
           )}
 
-          <button
-            onClick={handlePerfil}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-800 text-sm font-medium rounded-lg hover:bg-indigo-200 transition"
-          >
+          <button onClick={handlePerfil} className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-800 text-sm font-medium rounded-lg hover:bg-indigo-200 transition">
             <BookOpen size={16} /> Saber más
           </button>
         </div>
