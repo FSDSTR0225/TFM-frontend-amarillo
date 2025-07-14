@@ -137,7 +137,7 @@ export const saveBook = async (token, bookId) => {
 
 // Obtener libros guardados
 export const getSavedBooks = async (token) => {
-  const res = await fetch("http://localhost:3000/books/saved", {
+  const res = await fetch("http://localhost:3000/books/saved/all", {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

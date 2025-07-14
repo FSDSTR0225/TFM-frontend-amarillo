@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getVoteBooks } from "../api/BookApi";
+import { getVoteBooks, saveBook } from "../api/BookApi";
 import "../styles/BookCard.css";
 
 //nuevo callback a Books
@@ -19,6 +19,14 @@ function BookCard({ book, onVoteUpdate }) {
       setLikeCount(updated.like);
       setDislikeCount(updated.dislike);
       onVoteUpdate(book._id, updated.like, updated.dislike); // ⬅️ avisa al padre
+    } catch (err) {
+      console.error("Error al votar:", err);
+    }
+  };
+  const savesBooks = async () => {
+    try {
+      const saved = await saveBook(token, book._id);
+      console.log("Libro guardado:", saved);
     } catch (err) {
       console.error("Error al votar:", err);
     }
@@ -50,7 +58,7 @@ function BookCard({ book, onVoteUpdate }) {
         <button className="action-btn" onClick={() => handleVote("dislike")}>
           👎 No me gusta ({dislikeCount})
         </button>
-        <button className="action-btn">💾 Guardar</button>
+        <button className="action-btn"onClick={savesBooks}>💾 Guardar</button>
         <button className="action-btn" onClick={handlePerfil}>
           📖 Saber más
         </button>
