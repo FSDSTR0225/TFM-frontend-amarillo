@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { getUserId, updateUser } from "../api/UserApi";
-import genresOptions from "../utils/genresOptions";
-import languageOptions from "../utils/languageOptions";
+import { deleteUserApi, updateUser } from "../api/UserApi";
 import { useUser } from "../context/UserContext";
+import { Camera, Lock, Unlock } from "lucide-react";
+import { useLogin } from "../context/contextLogin";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user, setUser } = useUser();
+  const {token, logout} = useLogin();
   const { register, handleSubmit, watch, setValue } = useForm();
   const [preview, setPreview] = useState(null);
   const [originalData, setOriginalData] = useState(null);
@@ -14,14 +16,13 @@ const Profile = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isChanged, setIsChanged] = useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
+    const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
       if (!user) return;
       setOriginalData(user);
       setValue("name", user.name);
-      setValue("genres", user.genres);
-      setValue("languages", user.languages);
       if (user.photoUrl) setPreview(user.photoUrl);
     };
     fetchUser();
@@ -59,9 +60,9 @@ const Profile = () => {
 
       const formData = new FormData();
       formData.append("name", data.name);
-      formData.append("genres", JSON.stringify(data.genres));
-      formData.append("languages", JSON.stringify(data.languages));
+      console.log("photo1", data.photo[0]);
       if (data.photo && data.photo[0]) {
+        console.log("photo2", data.photo[0]);
         formData.append("photo", data.photo[0]);
       }
 
@@ -70,13 +71,19 @@ const Profile = () => {
         formData.append("newPassword", data.newPassword);
       }
 
-      const token = localStorage.getItem("token");
-      const updatedUser = await updateUser(formData);
+      const updatedUser = await updateUser(token,formData);
       setSuccessMessage("Perfil actualizado con éxito.");
       setErrorMessage("");
       setIsChanged(false);
       setShowPasswordFields(false);
       setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser)); //código añadido para ver nombre actualizado en el formulario
+
+      //código añadido para ver nombre actualizado en el formulario
+      console.log("Usuario actualizado:", updatedUser);
+
+      setValue("name", updatedUser.name);
+
       if (updatedUser.photoUrl) setPreview(updatedUser.photoUrl);
     } catch (error) {
       console.error("Detalles del error al actualizar:", error);
@@ -94,107 +101,144 @@ const Profile = () => {
     setPreview(URL.createObjectURL(file));
   };
 
+const deleteUser = async () => {
+  try {
+    await deleteUserApi(token, user._id);
+    console.log("Usuario eliminado correctamente");
+   logout();
+    navigate("/");
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    setErrorMessage("Error al eliminar la cuenta.");
+  }
+};
+
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="p-4 max-w-xl mx-auto space-y-4"
-    >
-      <h2 className="text-xl font-semibold">Editar Perfil</h2>
-
-      <input
-        {...register("name", { required: true })}
-        placeholder="Nombre"
-        className="w-full border p-2"
-      />
-
-      <button
-        type="button"
-        onClick={() => setShowPasswordFields(!showPasswordFields)}
-        className="text-blue-600 underline"
+    <div className="min-h-screen bg-gray-50 py-10 px-4 flex justify-center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-8 space-y-6"
       >
-        {showPasswordFields
-          ? "Cancelar cambio de contraseña"
-          : "Cambiar contraseña"}
-      </button>
-
-      {showPasswordFields && (
         <div className="space-y-2">
-          <input
-            {...register("currentPassword", { required: true })}
-            type="password"
-            placeholder="Contraseña actual"
-            className="w-full border p-2"
-          />
-          <input
-            {...register("newPassword", { required: true, minLength: 6 })}
-            type="password"
-            placeholder="Nueva contraseña"
-            className="w-full border p-2"
-          />
-          <input
-            {...register("confirmPassword", { required: true, minLength: 6 })}
-            type="password"
-            placeholder="Confirmar nueva contraseña"
-            className="w-full border p-2"
-          />
+          <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">
+            ¿Cuál es tu nombre?
+          </h2>
         </div>
-      )}
 
-      <div className="flex flex-col space-y-2">
-        <label>Foto de perfil:</label>
         <input
-          type="file"
-          {...register("photo")}
-          onChange={handleImageChange}
-          className="w-full"
+          {...register("name", { required: true })}
+          placeholder="Nombre"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
         />
-        {preview && (
-          <img
-            src={preview}
-            alt="preview"
-            className="rounded-full object-cover mt-2"
-            style={{ width: "100px", height: "100px", maxHeight: "100px" }}
-          />
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">
+            ¿Quieres cambiar la contraseña?
+          </h2>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowPasswordFields(!showPasswordFields)}
+          className="flex items-center gap-2 bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-full shadow hover:bg-indigo-200 transition"
+        >
+          {showPasswordFields ? (
+            <>
+              <Unlock size={18} /> Cancelar cambio de contraseña
+            </>
+          ) : (
+            <>
+              <Lock size={18} /> Cambiar contraseña
+            </>
+          )}
+        </button>
+
+        {showPasswordFields && (
+          <div className="space-y-4">
+            <input
+              {...register("currentPassword", { required: true })}
+              type="password"
+              placeholder="Contraseña actual"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
+            />
+            <input
+              {...register("newPassword", { required: true, minLength: 6 })}
+              type="password"
+              placeholder="Nueva contraseña"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
+            />
+            <input
+              {...register("confirmPassword", { required: true, minLength: 6 })}
+              type="password"
+              placeholder="Confirmar nueva contraseña"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 font-serif"
+            />
+          </div>
         )}
-      </div>
 
-      <div className="flex flex-col space-y-2 mt-4">
-        <label>Géneros literarios:</label>
-        <select multiple {...register("genres")} className="w-full border p-2">
-          {genresOptions.map((g) => (
-            <option key={g} value={g}>
-              {g}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold text-indigo-800 font-serif mb-2 leading-snug">
+            ¿Cómo quieres que te vean?{" "}
+            <span className="text-indigo-800 font-bold">
+              ¡Elige tu mejor foto de perfil!
+            </span>
+          </h2>
 
-      <label>Idiomas:</label>
-      <select
-        multiple
-        {...register("languages", {
-          validate: (v) => Array.isArray(v) && v.length > 0,
-        })}
-        className="w-full border p-2"
-      >
-        {languageOptions.map((l) => (
-          <option key={l} value={l}>
-            {l}
-          </option>
-        ))}
-      </select>
+          <label className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-full shadow hover:bg-indigo-200 transition cursor-pointer">
+            <Camera size={18} />
+            Seleccionar archivo
+            <input
+              type="file"
+              {...register("photo")}
+              onChange={(e) => {
+                register("photo").onChange(e); // para que react-hook-form lo registre
+                handleImageChange(e);
+              }}
+              className="hidden"
+            />
+          </label>
 
-      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-      {successMessage && <p className="text-green-500">{successMessage}</p>}
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              className="rounded-full object-cover mt-2 shadow-md"
+              style={{ width: "100px", height: "100px" }}
+            />
+          )}
+        </div>
 
-      <button
-        type="submit"
-        disabled={!isChanged}
-        className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
-      >
-        Guardar Cambios
-      </button>
-    </form>
+        <button
+          type="submit"
+          disabled={!isChanged}
+          className="bg-[#280f91] hover:bg-[#dce1f9] hover:text-[#280f91] text-[#dce1f9] font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block"
+        >
+          Guardar Cambios
+        </button>
+
+          <button
+           type="button"
+          onClick={deleteUser}
+          className="bg-red-500 hover:bg-gray-200 hover:text-black text-black font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block"
+        >
+          Eliminar cuenta
+        </button>
+
+        {successMessage && (
+          <p className="text-green-700 bg-green-100 border border-green-300 p-3 rounded font-serif text-sm">
+            {successMessage}
+          </p>
+        )}
+
+        {errorMessage && (
+          <p className="text-red-700 bg-red-100 border border-red-300 p-3 rounded font-serif text-sm">
+            {errorMessage}
+          </p>
+        )}
+        
+       
+      </form>
+
+    </div>
   );
 };
 

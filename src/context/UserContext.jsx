@@ -6,7 +6,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  //*donde guardas el objeto user
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
@@ -31,12 +31,6 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
-  return (
-    <UserContext.Provider
-      value={{ user, token, login, logout, loading, setUser }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ user, token, login, logout, loading, setUser }}>{children}</UserContext.Provider>;
 };
 export const useUser = () => useContext(UserContext);

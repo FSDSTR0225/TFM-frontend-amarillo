@@ -8,10 +8,9 @@ import AdvancedForm from "../pages/AdvanceForm";
 import PerfilBook from "../pages/PerfilBook";
 import ErrorPage from "../pages/ErrorPage";
 import Register from "../pages/register";
-
-import Chat from "../pages/chat";
 import NotFount from "../pages/notFount";
 import LookFriends from "../pages/lookFriends";
+
 
 const router = createBrowserRouter([
   {
@@ -51,17 +50,10 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
+
         path: "/LookFriends",
         // element: <LookFriends/>,
         element: <LookFriends />,
-      },
-      {
-        path: "/LookFriends/chat/:roomId",
-        element: <Chat />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
       },
       {
         path: "/*",

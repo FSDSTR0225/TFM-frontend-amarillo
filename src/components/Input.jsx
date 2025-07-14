@@ -13,7 +13,7 @@ const InputField = ({
 }) => {
   return (
     <>
-      <label>
+    
         {/* Renderizar el input o el textarea */}
         {type === "textarea" ? (
           <textarea
@@ -34,7 +34,7 @@ const InputField = ({
             {...register(name, validationRules)}
           />
         )}
-      </label>
+
       {/* Mostrar errores si existen */}
       {errors && errors[name] && (
         <span style={{ color: 'red', fontSize: '0.875rem' }}>

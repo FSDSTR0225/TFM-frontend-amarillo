@@ -1,5 +1,7 @@
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+
+
 export const registerUser = async (data) => {
   const res = await fetch(`${backendUrl}/users/register`, {
     method: "POST",
@@ -16,9 +18,10 @@ export const loginUser = async (data) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-
   return res.json();
 };
+
+
 
 export const getUserId = async (token, id) => {
   const res = await fetch(`${backendUrl}/users/${id}`, {
@@ -26,15 +29,52 @@ export const getUserId = async (token, id) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + token,
+
     },
   });
 
   return res.json();
 };
 
-export const updateUser = async (formData) => {
-  const token = localStorage.getItem("token");
 
+
+export const getPreferences = async (token, id) => {
+  const res = await fetch(`${backendUrl}/users/preferences/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+  });
+  return res.json();
+};
+
+export const postPreferences = async (token, id, data) => {
+  const res = await fetch(`${backendUrl}/users/preferences/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+    body: JSON.stringify({ voteType: data }),
+  });
+  return res.json();
+};
+
+export const getLikes = async (token, id) => {
+  const res = await fetch(`${backendUrl}/users/like/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    },
+     });
+  return res.json();
+};
+    
+
+export const updateUser = async (token ,formData) => {
+ 
   const res = await fetch(`${backendUrl}/users/profile`, {
     method: "PUT",
     headers: {
@@ -55,8 +95,18 @@ export const updateUser = async (formData) => {
 };
 
 export const getUser = async (token) => {
-  const res = await fetch(`${backendUrl}/users`, {
+  const res = await fetch(`${backendUrl}/users/all`, {
+
     method: "GET",
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+  });
+  return res.json();
+};
+
+
+export const deleteUserApi = async (token,id) => {
+  const res = await fetch(`${backendUrl}/users/delete/${id}`, {
+    method: "DELETE",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
   return res.json();
