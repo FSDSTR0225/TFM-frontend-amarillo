@@ -124,31 +124,34 @@ function Chat({ userFriends, oline, socket, roomId }) {
       <div className="flex-1 py-6 px-8 overflow-y-auto flex flex-col gap-6">
         {messages.map((msg, index) => (
           <div key={index} className={`flex ${msg.userID === id ? "justify-end" : "justify-start"}`}>
-            <div className={`px-4 py-3 rounded-2xl shadow-sm max-w-xs sm:max-w-md md:max-w-lg ${msg.userID === id ? "bg-blue-500 text-white rounded-br-md" : "bg-white text-gray-800 rounded-bl-md border border-gray-200"}`}>
-              <img className="rounded-full w-10 h-10 object-cover mb-2" src={msg.userID === id ? user.profilePicture : userFriends.profilePicture} alt="avatar" />
-              <span className="message-text block mb-2">{msg.text}</span>
+            <div className="max-w-xs sm:max-w-md md:max-w-lg flex flex-col">
+              {/* Mensaje */}
+              <div className={`px-4 py-3 rounded-2xl shadow-sm ${msg.userID === id ? "bg-blue-500 text-white rounded-br-md self-end" : "bg-white text-gray-800 rounded-bl-md border border-gray-200 self-start"}`}>
+                <span className="block mb-2">{msg.text}</span>
+                {msg.bookID && (
+                  <button className={`p-2 text-sm rounded-full ${msg.userID === id ? "hover:text-white hover:bg-blue-600" : "hover:text-gray-800 hover:bg-gray-200"}`} onClick={() => handlePerfil(msg.bookID)}>
+                    Perfil del libro 📚
+                  </button>
+                )}
+              </div>
 
-              {msg.bookID && (
-                <button className={`p-2 text-sm rounded-full ${msg.userID === id ? "hover:text-white hover:bg-blue-600" : "hover:text-gray-800 hover:bg-gray-200"}`} onClick={() => handlePerfil(msg.bookID)}>
-                  Perfil del libro 📚
-                </button>
-              )}
-
-              {msg.userID === id && (
-                <button className="mt-2 block border-red-500 bg-red-500 rounded-full hover:text-white hover:bg-red-700 w-5 h-5 text-center" onClick={() => eliminar(msg._id)} aria-label="Eliminar">
-                  X
-                </button>
-              )}
-
-              <span className="text-xs font-medium text-gray-500 block mt-1">
-                {new Date(msg.createdAt).toLocaleString("es-ES", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
+              {/* Acciones y Fecha */}
+              <div className={`mt-2 text-xs flex flex-col gap-1 ${msg.userID === id ? "items-end" : "items-start"}`}>
+                {msg.userID === id && (
+                  <button className="text-red-600 hover:underline" onClick={() => eliminar(msg._id)}>
+                    Eliminar mensaje
+                  </button>
+                )}
+                <span className="text-gray-500">
+                  {new Date(msg.createdAt).toLocaleString("es-ES", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
             </div>
           </div>
         ))}
