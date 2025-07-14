@@ -104,8 +104,8 @@ function PerfilBook() {
     <>
       <div className="max-w-4xl mx-auto px-4 py-8 font-serif">
         <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-md overflow-hidden">
-          <img src={book.imgBook || "image-placeholder.jpg"} alt={book.name} className="w-full md:w-1/3 object-cover h-64 md:h-auto" />
-          <div className="p-6 flex flex-col gap-3">
+          <img src={book.imgBook || "image-placeholder.jpg"} alt={book.name} className="w-full md:w-1/2 lg:w-1/3 object-cover h-96 md:h-auto rounded-l-2xl" />
+          <div className="p-6 flex flex-col gap-3 md:w-1/2 lg:w-2/3">
             <h2 className="text-2xl font-semibold">{book.name}</h2>
             <p>
               <strong>Autor:</strong> {book.author}
@@ -157,7 +157,7 @@ function PerfilBook() {
         </div>
 
         {/* Formulario de opinión */}
-        <div className="flex flex-col justify-center  bg-[#FFFFFF]">
+        <div className="flex flex-col justify-center bg-[#FFFFFF]">
           <h4 className="text-xl font-bold font-serif text-[#280f91] m-[15px]">Deja tu opinión</h4>
           <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-4">
             <div>
