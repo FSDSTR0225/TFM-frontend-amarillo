@@ -1,4 +1,5 @@
 
+
 // src/pages/Books.jsx
 import { useEffect, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
@@ -36,6 +37,7 @@ function Books() {
       try {
         // mado el token al api
         const response = await getBooks(token);
+
         setBooks(response);
 // Si venimos desde la vista de detalle con un idBook, 
          if (idBook) {

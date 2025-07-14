@@ -1,5 +1,6 @@
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+
 export const getBooks = async (token, filters = {}) => {
   // filters es opcional y por defecto un objeto vacío
   // Construir la URL con los parámetros de consulta
@@ -31,32 +32,38 @@ export const getBooks = async (token, filters = {}) => {
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
   return res.json();
-};
+  }
 
 export const Bookdata = async (token, id) => {
+
   const res = await fetch(`${backendUrl}/books/${id}`, {
     method: "GET",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token, },
+    
   });
   return res.json();
-};
+  }
+
 
 export const rewiusBook = async (data, token, id) => {
+
   const res = await fetch(`${backendUrl}/books/review/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token, },
     body: JSON.stringify(data),
   });
   return res.json();
-};
+  }
+
 
 export const deleteRewius = async (data, token, id) => {
+
   const res = await fetch(`${backendUrl}/books/review/${id}?reviewId=${data}`, {
     method: "DELETE",
-    headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
+    headers: { "Content-Type": "application/json", authorization: "Bearer " + token, },
   });
   return res.json();
-};
+  };
 
 export const getVoteBooks = async (token, bookId, voteType) => {
   const res = await fetch(`${backendUrl}/books/${bookId}/vote`, {
@@ -68,6 +75,7 @@ export const getVoteBooks = async (token, bookId, voteType) => {
 
   return res.json();
 };
+
 //peticiones para obtener géneros y autores
 export async function getGenres(token) {
   const response = await fetch(`${backendUrl}/books/genres`, {
@@ -158,4 +166,5 @@ export const deleteSaveBook = async (token, bookId) => {
   if (!res.ok) throw new Error("Error al guardar el libro");
   return res.json();
 };
+
 

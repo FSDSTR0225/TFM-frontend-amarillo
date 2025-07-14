@@ -1,5 +1,5 @@
-
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 
 export const registerUser = async (data) => {
@@ -75,7 +75,6 @@ export const getLikes = async (token, id) => {
 
 export const updateUser = async (token ,formData) => {
  
-
   const res = await fetch(`${backendUrl}/users/profile`, {
     method: "PUT",
     headers: {
@@ -97,6 +96,7 @@ export const updateUser = async (token ,formData) => {
 
 export const getUser = async (token) => {
   const res = await fetch(`${backendUrl}/users/all`, {
+
     method: "GET",
     headers: { "Content-Type": "application/json", authorization: "Bearer " + token },
   });
