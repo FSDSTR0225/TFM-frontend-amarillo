@@ -121,3 +121,41 @@ export const voteBooks = async (token, bookId, ) => {
 }
 
 
+// Guardar un libro
+export const saveBook = async (token, bookId) => {
+  const res = await fetch(`${backendUrl}/books/save/${bookId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Error al guardar el libro");
+  return res.json();
+};
+
+// Obtener libros guardados
+export const getSavedBooks = async (token) => {
+  const res = await fetch(`${backendUrl}/books/saved/all`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Error al obtener libros guardados");
+  return res.json();
+};
+
+
+export const deleteSaveBook = async (token, bookId) => {
+  const res = await fetch(`${backendUrl}/books/saved/${bookId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Error al guardar el libro");
+  return res.json();
+};
+
