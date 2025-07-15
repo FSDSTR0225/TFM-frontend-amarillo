@@ -47,9 +47,7 @@ function LookFriends() {
     });
 
 
-    socketRef.current.on("unread messages", ({ msg, user2 }) => {
-      setnotRead((prev) => ({ ...prev, [user2]: msg }));
-    });
+   
 
     console.log(onlineUsers);
     return () => {
@@ -66,7 +64,19 @@ function LookFriends() {
       userid2: user._id
     });
   });
+
+     socketRef.current.on("unread messages", ({ msg, user2 }) => {
+      setnotRead((prev) => ({ ...prev, [user2]: msg }));
+    });
+    
+    return () => {
+      socketRef.current.off("unread messages");
+    };
 }, [userData, id]);
+
+
+
+
 
 
 
