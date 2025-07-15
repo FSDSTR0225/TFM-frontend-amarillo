@@ -6,7 +6,6 @@ import { io } from "socket.io-client";
 import Chat from "../components/chat";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-
 function LookFriends() {
   const [userData, setUserData] = useState([]);
   const { token, id } = useLogin();
@@ -17,7 +16,7 @@ function LookFriends() {
   const [showChat, setShowChat] = useState(false);
   const [roomID, setroomID] = useState("");
   const [userFriends, setuserFriends] = useState([]);
-  const [notRead, setnotRead] = useState([]);
+  const [notRead, setnotRead] = useState({});
 
   const fetchUserData = async () => {
     try {
@@ -47,21 +46,10 @@ function LookFriends() {
       console.log("Usuarios en línea:", ids);
     });
 
-    userData.forEach((user) => {
-      socketRef.current.emit("unread messages", {
-        userid1: id,
-        userid2: user._id,
-      });
-   
 
-    socketRef.current.on("unread messages", (readMessages) => {
-
-        setnotRead(readMessages);
-        console.log("Mensajes no leídos:", readMessages);
+    socketRef.current.on("unread messages", ({ msg, user2 }) => {
+      setnotRead((prev) => ({ ...prev, [user2]: msg }));
     });
- });
-
-
 
     console.log(onlineUsers);
     return () => {
@@ -69,14 +57,18 @@ function LookFriends() {
     };
   }, []);
 
+
+
   useEffect(() => {
-    userData.forEach((user) => {
-      socketRef.current.emit("unread messages", {
-        userid1: id,
-        userid2: user._id,
-      });
+  userData.forEach(user => {
+    socketRef.current.emit("unread messages", {
+      userid1: id,
+      userid2: user._id
     });
-  }, [userData, id]);
+  });
+}, [userData, id]);
+
+
 
   //En tu componente LookFriends, estás creando una nueva conexión de socket cada vez que se llama a roomNavegation, lo cual puede resultar en múltiples conexiones innecesarias.
   function roomNavegation(userId, friend) {
@@ -85,7 +77,11 @@ function LookFriends() {
       userid1: userId,
       userid2: friend._id,
     });
-
+    socketRef.current.emit("mark read", {
+       userid1: userId,
+      userid2: friend._id,
+    });
+    notRead[friend._id] = 0; // Reiniciar el contador de mensajes no leídos al abrir el chat
     // Escuchar la respuesta del servidor con la ID de la sala
     socketRef.current.on("room joined", ({ roomId }) => {
       setroomID(roomId);
@@ -139,7 +135,7 @@ function LookFriends() {
                       ? "🟢 En línea"
                       : "⚪️ Desconectado"}
                   </small>
-                  {/* <p>{}</p> */}
+                  {notRead[user._id] > 0 ? `${notRead[user._id]} mensajes sin leer` : ""}
                 </div>
               </div>
             ))}
