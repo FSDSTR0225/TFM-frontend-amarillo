@@ -18,6 +18,8 @@ function Chat({ userFriends, oline, socket, roomId }) {
   const [books, setbooks] = useState([]);
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
   const fetchBooks = async () => {
     try {
@@ -31,7 +33,7 @@ function Chat({ userFriends, oline, socket, roomId }) {
 
   useEffect(() => {
     // Conectar al socket.io
-    socketRef.current = io("http://localhost:3000");
+    socketRef.current = io(backendUrl);
 
     fetchBooks();
 
