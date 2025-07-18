@@ -5,10 +5,10 @@ import { useUser } from "../context/UserContext";
 import { Camera, Lock, Unlock } from "lucide-react";
 import { useLogin } from "../context/contextLogin";
 import { useNavigate } from "react-router-dom";
-
+import { confirmDeleteAlert, showAlert } from "../components/Sweetalerts";
 const Profile = () => {
   const { user, setUser } = useUser();
-  const {token, logout} = useLogin();
+  const { token, logout } = useLogin();
   const { register, handleSubmit, watch, setValue } = useForm();
   const [preview, setPreview] = useState(null);
   const [originalData, setOriginalData] = useState(null);
@@ -16,7 +16,7 @@ const Profile = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isChanged, setIsChanged] = useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -71,7 +71,7 @@ const Profile = () => {
         formData.append("newPassword", data.newPassword);
       }
 
-      const updatedUser = await updateUser(token,formData);
+      const updatedUser = await updateUser(token, formData);
       setSuccessMessage("Perfil actualizado con éxito.");
       setErrorMessage("");
       setIsChanged(false);
@@ -101,18 +101,24 @@ const Profile = () => {
     setPreview(URL.createObjectURL(file));
   };
 
-const deleteUser = async () => {
-  try {
-    await deleteUserApi(token, user._id);
-    console.log("Usuario eliminado correctamente");
-   logout();
-    navigate("/");
-  } catch (error) {
-    console.error("Error al eliminar usuario:", error);
-    setErrorMessage("Error al eliminar la cuenta.");
-  }
-};
+  const deleteUser = async () => {
+    const result = await confirmDeleteAlert("tu cuenta");
+    if (!result.isConfirmed) return;
 
+    try {
+      await deleteUserApi(token, user._id);
+      showAlert(
+        "Cuenta eliminada",
+        "Tu cuenta ha sido eliminada correctamente",
+        "success"
+      );
+      logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Error al eliminar usuario:", error);
+      setErrorMessage("Error al eliminar la cuenta.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 flex justify-center">
@@ -215,8 +221,8 @@ const deleteUser = async () => {
           Guardar Cambios
         </button>
 
-          <button
-           type="button"
+        <button
+          type="button"
           onClick={deleteUser}
           className="bg-red-500 hover:bg-gray-200 hover:text-black text-black font-bold font-serif rounded-full p-[10px] mt-4 mx-auto block"
         >
@@ -234,10 +240,7 @@ const deleteUser = async () => {
             {errorMessage}
           </p>
         )}
-        
-       
       </form>
-
     </div>
   );
 };

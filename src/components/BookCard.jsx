@@ -1,7 +1,4 @@
-// src/components/BookCard.jsx
-
 import { useNavigate } from "react-router-dom";
-
 import { useEffect, useState } from "react";
 import {
   deleteSaveBook,
@@ -18,121 +15,116 @@ import {
   BookOpen,
   BookmarkX,
 } from "lucide-react";
+import { confirmDeleteAlert, showAlert } from "./Sweetalerts"; // asegúrate que este archivo esté creado
 
-function BookCard({ book }) {
+function BookCard({ book, onRemove }) {
   const navigate = useNavigate();
-
-  function handlePerfil() {
-    navigate(`/books/PerfilBook`, { state: { book: book } });
-  }
+  const token = localStorage.getItem("token");
 
   const [likeCount, setLikeCount] = useState(book.like || 0);
   const [dislikeCount, setDislikeCount] = useState(book.dislike || 0);
   const [saved, setSaved] = useState(false);
-  console.log("name del libro:", book.name);
-  console.log("contador dislike", book.dislike);
-  console.log("contador like", book.like);
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // Función para manejar el voto al cargar el componente
     const handleVote = async () => {
       try {
         const res = await voteBooks(token, book._id);
-        if (!res) {
-          throw new Error(res.message || `Error al obtener los votos`);
-        }
         setLikeCount(res.like);
         setDislikeCount(res.dislike);
       } catch (error) {
         console.error("Error al manejar el voto:", error);
       }
     };
+
     handleVote();
     fetchSaved();
   }, []);
 
   const fetchSaved = async () => {
     const savedBooks = await getSavedBooks(token);
-    console.log("Libros guardados:", savedBooks);
-    console.log("Libro actual:", book._id);
-
     const isSaved = savedBooks.some(
       (id) => id._id.toString() === book._id.toString()
     );
-    console.log("ID del libro actual:", isSaved);
     setSaved(isSaved);
   };
 
   const handleVote = async (voteType) => {
     try {
       const res = await getVoteBooks(token, book._id, voteType);
-
-      if (!res) {
-        throw new Error(res.message || `Error al enviar el voto`);
-      }
-      console.log("Voto enviado:", res);
-      const updatedBook = res;
-      setLikeCount(updatedBook.like);
-      setDislikeCount(updatedBook.dislike);
+      setLikeCount(res.like);
+      setDislikeCount(res.dislike);
     } catch (error) {
       console.error("Error al votar:", error);
     }
   };
-  const preferences = async (voteType) => {
-    const res = await postPreferences(token, book._id, voteType);
 
-    console.log("preferncia enviada", res);
+  const preferences = async (voteType) => {
+    await postPreferences(token, book._id, voteType);
   };
+
   const handleSaveBook = async () => {
     try {
-      const saved = await saveBook(token, book._id);
-      console.log("Libro guardado:", saved);
+      await saveBook(token, book._id);
       fetchSaved();
     } catch (err) {
-      console.error("Error al votar:", err);
+      console.error("Error al guardar libro:", err);
     }
-    
   };
+
   const handleRemoveSavedBook = async () => {
+    const result = await confirmDeleteAlert("este libro guardado");
+    if (!result.isConfirmed) return;
+
     try {
-      const deletesaved = await deleteSaveBook(token, book._id);
-      console.log("Libro guardado eliminadio:", deletesaved);
-      fetchSaved();
+      await deleteSaveBook(token, book._id);
+      setSaved(false);
+      showAlert("Eliminado", "Libro eliminado de guardados", "success");
+
+      // Si BookCard fue usado desde Save.jsx, notificar que debe eliminarse de pantalla
+      if (onRemove) {
+        onRemove(book._id);
+      } else {
+        fetchSaved(); // Si no está en Save.jsx, solo actualizamos estado local
+      }
     } catch (err) {
-      console.error("Error al votar:", err);
+      console.error("Error al eliminar libro guardado:", err);
+      showAlert("Error", "No se pudo eliminar el libro", "error");
     }
+  };
+
+  const handlePerfil = () => {
+    navigate(`/books/PerfilBook`, { state: { book: book } });
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
-      {/* Imagen del libro */}
-      <div className="md:w-1/3 w-full">
+    <div className="w-full max-w-sm mx-auto bg-white shadow-md rounded-xl overflow-hidden border border-gray-200 flex flex-col">
+      <div className="w-full h-120">
         <img
           src={book.imgBook}
           alt={book.name}
-          className="object-cover w-full h-full md:h-auto"
+          className="w-full h-full object-cover"
         />
       </div>
-      {/* Contenido */}
-      <div className="md:w-2/3 w-full p-6 flex flex-col justify-between">
+
+      <div className="p-4 flex flex-col justify-between flex-grow">
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-gray-800">{book.name}</h2>
-          <p className="text-gray-700">
+          <h2 className="text-xl font-bold text-gray-800 line-clamp-2">
+            {book.name}
+          </h2>
+          <p className="text-gray-700 text-sm">
             <strong>Autor:</strong> {book.author}
           </p>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-sm">
             <strong>Género:</strong> {book.genre}
           </p>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-sm">
             <strong>Idioma:</strong> {book.language}
           </p>
-          <p className="text-gray-600 text-sm mt-2">
+          <p className="text-gray-600 text-sm mt-2 line-clamp-3">
             <strong>Sinopsis:</strong> {book.synopsis}
           </p>
         </div>
 
-        {/* Botones */}
         <div className="flex flex-wrap gap-2 mt-4">
           <button
             onClick={() => {
@@ -181,4 +173,5 @@ function BookCard({ book }) {
     </div>
   );
 }
+
 export default BookCard;
